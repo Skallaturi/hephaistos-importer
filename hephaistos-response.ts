@@ -4,7 +4,6 @@
 export type HephaistosResponse = {
 	data: Data;
 };
-
 type Data = {
 	characters: Character[];
 };
@@ -27,6 +26,7 @@ export type Character = {
 	abilityScores: AbilityScores;
 	conditions: { [key: string]: Condition };
 	name: string;
+	classes: ClassElement[];
 };
 
 type AbilityScores = {
@@ -69,6 +69,14 @@ type Override = {
 	speedAdjustmentOverride?: null;
 };
 
+type ClassElement = {
+	class: ClassClassClass;
+};
+
+type ClassClassClass = {
+	armorProficiency: string[];
+};
+
 type Condition = {
 	override: boolean | null;
 };
@@ -87,9 +95,9 @@ type Defence = {
 
 type Inventory = {
 	__typename: string;
-	maxDexBonusOverride?: null;
-	kacBonusOverride?: null;
-	eacBonusOverride?: null;
+	maxDexBonusOverride?: number | null;
+	kacBonusOverride?: number | null;
+	eacBonusOverride?: number | null;
 	isEquipped?: boolean;
 	armor?: Armor;
 	alignedAcBonusOverride?: null;

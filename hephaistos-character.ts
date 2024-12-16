@@ -55,6 +55,7 @@ class HephaistosCharacter {
 
 		return this.calculateAbility(abilityName);
 	}
+
 	AbilityModifier(abilityName: Ability): number {
 		const score = this.AbilityScore(abilityName);
 		let modifier = Math.floor((score - 10) / 2);
@@ -70,6 +71,51 @@ class HephaistosCharacter {
 		modifier -= modifierDamage;
 
 		return modifier;
+	}
+
+	ArmorClass(acType: ArmorClass): number {
+		let ac = 10;
+		let dexBonus = this.AbilityModifier("Dex");
+
+		//ARMOR
+		const equippedArmor = this.data.inventory.find(
+			(a) => a.armor && a.isEquipped
+		);
+		if (equippedArmor) {
+			let maxDexBonus = null;
+			let armorBonus = 0;
+
+			maxDexBonus =
+				equippedArmor.maxDexBonusOverride ??
+				equippedArmor.armor?.maxDexBonus;
+
+			if (acType === "EAC") {
+				armorBonus =
+					equippedArmor.eacBonusOverride ??
+					equippedArmor.armor?.eacBonus ??
+					0;
+			} else {
+				armorBonus =
+					equippedArmor.kacBonusOverride ??
+					equippedArmor.armor?.kacBonus ??
+					0;
+			}
+
+			if (maxDexBonus !== undefined && maxDexBonus < dexBonus) {
+				dexBonus = maxDexBonus;
+			}
+
+			ac += armorBonus;
+			//TODO has proficiency
+		}
+		//SHIELD
+		//TODO has proficiency
+		//TODO: OTHER
+
+		//TODO overburdened
+		ac += dexBonus;
+
+		return ac;
 	}
 
 	protected calculateAbility(abilityName: Ability): number {
@@ -194,6 +240,8 @@ function abilityBonusFromEffect(effect: string, ability: Ability): number {
 	const bonus = abilityMap[ability] || 0;
 	return bonus;
 }
+
+type ArmorClass = "EAC" | "KAC";
 
 // Hephaistos uses several different ways of writing ability names.
 // Let's make sure we have the right one

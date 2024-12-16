@@ -358,6 +358,11 @@ export function hephaistosQuery(characterId: string): string {
         override
       }
     }
+    classes{
+        class{
+            armorProficiency
+        }
+    }
     conditions {
       unconscious {
         override

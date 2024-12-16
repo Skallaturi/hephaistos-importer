@@ -70,8 +70,11 @@ export default class HephaistosImporter extends Plugin {
 								character.AbilityScore("Cha") +
 								" (modifier " +
 								character.AbilityModifier("Cha") +
-								")",
-
+								")" +
+								"\nEAC: " +
+								character.ArmorClass("EAC") +
+								"\nKAC: " +
+								character.ArmorClass("KAC"),
 							0
 						);
 						// ---
