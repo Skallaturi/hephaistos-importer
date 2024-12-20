@@ -1,25 +1,16 @@
 import { importCharacter } from "hephaistos-character";
-import {
-	App,
-	Editor,
-	MarkdownView,
-	Notice,
-	Plugin,
-	PluginSettingTab,
-	Setting,
-} from "obsidian";
+import { App, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { UpdateCharacter } from "update-character";
-// TODO Remember to rename these classes and interfaces!
 
 interface HephaistosImporterPluginSettings {
 	//ids of characters to import
 	characterIds: string[];
-	// folder containing characters
+	// folder containing character markdown files
 	charactersFolder: string;
 }
 
 const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
-	characterIds: ["683304675"],
+	characterIds: [],
 	charactersFolder: "",
 };
 
@@ -51,16 +42,6 @@ export default class HephaistosImporter extends Plugin {
 				}
 			}
 		);
-
-		// This adds an editor command that can perform some operation on the current editor instance
-		this.addCommand({
-			id: "sample-editor-command",
-			name: "Sample editor command",
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				console.log(editor.getSelection());
-				editor.replaceSelection("Sample Editor Command");
-			},
-		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new HephaistosImporterSettingTab(this.app, this));
