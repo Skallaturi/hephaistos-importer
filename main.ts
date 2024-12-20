@@ -8,15 +8,19 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
+import { UpdateCharacter } from "update-character";
 // TODO Remember to rename these classes and interfaces!
 
 interface HephaistosImporterPluginSettings {
 	//ids of characters to import
 	characterIds: string[];
+	// folder containing characters
+	charactersFolder: string;
 }
 
 const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
 	characterIds: ["683304675"],
+	charactersFolder: "",
 };
 
 export default class HephaistosImporter extends Plugin {
@@ -36,47 +40,11 @@ export default class HephaistosImporter extends Plugin {
 						const character = await importCharacter(characterId);
 						new Notice("imported " + character.name());
 
-						// --- for testing
-						new Notice(
-							"conditions: " +
-								character.conditions().toString() +
-								"\nStr: " +
-								character.AbilityScore("Str") +
-								" (modifier " +
-								character.AbilityModifier("Str") +
-								")" +
-								"\nDex: " +
-								character.AbilityScore("Dex") +
-								" (modifier " +
-								character.AbilityModifier("Dex") +
-								")" +
-								"\nCon: " +
-								character.AbilityScore("Con") +
-								" (modifier " +
-								character.AbilityModifier("Con") +
-								")" +
-								"\nInt: " +
-								character.AbilityScore("Int") +
-								" (modifier " +
-								character.AbilityModifier("Int") +
-								")" +
-								"\nWis: " +
-								character.AbilityScore("Wis") +
-								" (modifier " +
-								character.AbilityModifier("Wis") +
-								")" +
-								"\nCha: " +
-								character.AbilityScore("Cha") +
-								" (modifier " +
-								character.AbilityModifier("Cha") +
-								")" +
-								"\nEAC: " +
-								character.ArmorClass("EAC") +
-								"\nKAC: " +
-								character.ArmorClass("KAC"),
-							0
+						UpdateCharacter(
+							this.app,
+							character,
+							this.settings.charactersFolder
 						);
-						// ---
 					} catch (error) {
 						new Notice(error);
 					}
@@ -148,6 +116,18 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.characterIds.join(","))
 					.onChange(async (value) => {
 						this.plugin.settings.characterIds = value.split(",");
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Characters folder")
+			.setDesc("The Obsidian folder containing your characters")
+			.addText((text) =>
+				text
+					.setValue(this.plugin.settings.charactersFolder)
+					.onChange(async (value) => {
+						this.plugin.settings.charactersFolder = value;
 						await this.plugin.saveSettings();
 					})
 			);

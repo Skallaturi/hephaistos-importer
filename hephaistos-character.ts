@@ -9,12 +9,17 @@ export async function importCharacter(
 	const resp = (await requestUrl({
 		url: "https://hephaistos.online/query",
 		method: "POST",
-		body: JSON.stringify({ query: hephaistosQuery(id) }),
+		body: JSON.stringify({
+			query: hephaistosQuery(),
+			variables: { characterId: id },
+		}),
 		headers: {
 			"content-type": "application/json",
 		},
 	}).json) as HephaistosResponse;
-	const characterData = resp.data?.characters?.find((c) => (c.id = id));
+	const characterData = resp.data?.characters?.find(
+		(c) => (c.readOnlyPermalinkId = id)
+	);
 	if (!characterData)
 		throw new Error("could not access character with id " + id);
 	const result = new HephaistosCharacter(characterData);
@@ -26,7 +31,7 @@ export async function importCharacter(
  *
  * NOTE: Since this is reverse-engineerd, there's probably something missing
  */
-class HephaistosCharacter {
+export class HephaistosCharacter {
 	constructor(data: CharacterData) {
 		this.data = data;
 	}
@@ -34,6 +39,13 @@ class HephaistosCharacter {
 
 	name(): string {
 		return this.data.name;
+	}
+
+	readonlyId(): string {
+		return this.data.readOnlyPermalinkId;
+	}
+	link(): string {
+		return "https://hephaistos.online/character/" + this.readonlyId();
 	}
 
 	conditions(): string[] {
@@ -106,13 +118,79 @@ class HephaistosCharacter {
 			}
 
 			ac += armorBonus;
-			//TODO has proficiency
-		}
-		//SHIELD
-		//TODO has proficiency
-		//TODO: OTHER
 
-		//TODO overburdened
+			// class.armorProficiency seems to always be ["LIGHT"]
+			const armorProficiencies: string[] = [];
+
+			for (const c of this.data.classes) {
+				armorProficiencies.push(
+					...c.class.armorProficiency.map((a) => a.toUpperCase())
+				);
+				if (c.class.armorProficiencyDescription) {
+					armorProficiencies.push(
+						...c.class.armorProficiencyDescription
+							.replace(" ", "")
+							.toUpperCase()
+							.split(",")
+					);
+				}
+			}
+			// TODO armor proficiencies from other sources
+
+			const armorType =
+				(
+					equippedArmor.armorType ?? equippedArmor.armor?.type
+				)?.toUpperCase() || "";
+			if (!armorProficiencies.contains(armorType)) {
+				ac -= 4;
+			}
+		}
+
+		//SHIELD
+		const equippedShield = this.data.inventory.find(
+			(a) => a.shield && a.isEquipped
+		);
+		if (equippedShield) {
+			let maxDexBonus = null;
+			let armorBonus = 0;
+
+			maxDexBonus =
+				equippedShield.maxDexBonusOverride ??
+				equippedShield.shield?.maxDexBonus;
+
+			armorBonus =
+				equippedShield.wieldAcBonusOverride ??
+				equippedShield.shield?.wieldAcBonus ??
+				0;
+
+			if (maxDexBonus !== undefined && maxDexBonus < dexBonus) {
+				dexBonus = maxDexBonus;
+			}
+
+			// class.armorProficiency seems to always be ["LIGHT"]
+			const armorProficiencies: string[] = [];
+
+			for (const c of this.data.classes) {
+				armorProficiencies.push(
+					...c.class.armorProficiency.map((a) => a.toUpperCase())
+				);
+				if (c.class.armorProficiencyDescription) {
+					armorProficiencies.push(
+						...c.class.armorProficiencyDescription
+							.replace(" ", "")
+							.toUpperCase()
+							.split(",")
+					);
+				}
+			}
+			// TODO armor proficiencies from other sources
+
+			if (armorProficiencies.contains("SHIELD")) {
+				ac += armorBonus;
+			}
+		}
+		console.log(dexBonus);
+		//TODO overburdened / encumbered
 		ac += dexBonus;
 
 		return ac;
@@ -158,13 +236,12 @@ class HephaistosCharacter {
 				) || [];
 			for (const option of options) {
 				const optionBonus = abilityBonusFromEffect(
-					option.effect,
+					option.effect || "",
 					abilityName
 				);
 				score += optionBonus;
 			}
 		}
-
 		// LEVEL INCREASES
 		for (const increases of this.data.abilityScores.increases) {
 			for (const increase of increases) {
@@ -180,9 +257,9 @@ class HephaistosCharacter {
 			(a) => a.__typename === "CharacterAugmentation" && a.isEquipped
 		);
 		for (const augmentation of augmentations) {
-			const selectedAdjustment = augmentation.selectedOptions?.[0].value;
+			const selectedAdjustment = augmentation.selectedOptions?.[0]?.value;
 			if (!selectedAdjustment) continue;
-			const adjustment = augmentation.augmentation?.options.find(
+			const adjustment = augmentation.augmentation?.options?.find(
 				(a) => a.id === selectedAdjustment
 			);
 			const bonus = abilityBonusFromEffect(

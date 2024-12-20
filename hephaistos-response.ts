@@ -4,29 +4,29 @@
 export type HephaistosResponse = {
 	data: Data;
 };
+
 type Data = {
 	characters: Character[];
 };
 
 export type Character = {
-	id: string;
+	readOnlyPermalinkId: string;
 	inventory: Inventory[];
 	shieldOverrides: unknown[];
-	armorOverrides: Override[];
+	armorOverrides: ArmorOverrideElement[];
 	theme: CharacterTheme;
 	race: CharacterRace;
 	save: Save;
 	resistance: Resistance;
 	defence: Defence;
-	initiativeNotes: string;
 	initiativeOverride: null;
 	speed: Speed;
 	vitals: Vitals;
 	bonusRanks: number;
 	abilityScores: AbilityScores;
-	conditions: { [key: string]: Condition };
-	name: string;
 	classes: ClassElement[];
+	conditions: { [key: string]: Speed };
+	name: string;
 };
 
 type AbilityScores = {
@@ -42,7 +42,6 @@ type AbilityScores = {
 
 type Cha = {
 	customBonus: CustomBonus[];
-	notes: string;
 	damage: number;
 	pointBuy: number;
 	base: null;
@@ -58,7 +57,7 @@ type CustomBonus = {
 	active: boolean;
 };
 
-type Override = {
+type ArmorOverrideElement = {
 	strengthOverride: null;
 	proficiencyOverride?: null;
 	armorCheckPenaltyOverride: null;
@@ -74,42 +73,53 @@ type ClassElement = {
 };
 
 type ClassClassClass = {
+	armorProficiencyDescription: string;
 	armorProficiency: string[];
 };
 
-type Condition = {
-	override: boolean | null;
+type Speed = {
+	override: OverrideUnion;
 };
+
+type OverrideUnion = unknown[] | boolean | null;
 
 type Defence = {
 	cmdCustomBonus: unknown[];
-	cmdNotes: string;
 	cmdOverride: null;
 	kacCustomBonus: unknown[];
-	kacNotes: string;
 	kacOverride: null;
 	eacCustomBonus: unknown[];
-	eacNotes: string;
 	eacOverride: null;
 };
 
 type Inventory = {
-	__typename: string;
+	__typename: Typename;
 	maxDexBonusOverride?: number | null;
 	kacBonusOverride?: number | null;
 	eacBonusOverride?: number | null;
 	isEquipped?: boolean;
 	armor?: Armor;
-	alignedAcBonusOverride?: null;
-	wieldAcBonusOverride?: null;
-	shield?: Shield;
 	augmentation?: Augmentation;
 	selectedOptions?: SelectedOption[];
-	override?: Override;
+	alignedAcBonusOverride?: number | null;
+	wieldAcBonusOverride?: null;
+	shield?: Shield;
+	override?: ArmorOverrideElement;
 	armorPerksIds?: string[];
 	armorFlawsIds?: string[];
 	armorType?: string;
 };
+
+type Typename =
+	| "CharacterArmor"
+	| "CharacterWeapon"
+	| "CharacterAmmunition"
+	| "CharacterAugmentation"
+	| "CharacterItem"
+	| "CharacterShield"
+	| "CharacterArmorUpgrade"
+	| "CharacterCustomItem"
+	| "ScalingArmor";
 
 type Armor = {
 	__typename: string;
@@ -127,13 +137,13 @@ type Movement = {
 };
 
 type Augmentation = {
-	options: AbilityAdjustment[];
+	options: AbilityAdjustment[] | null;
 	type: string;
 };
 
 type AbilityAdjustment = {
 	id: string;
-	effect: string;
+	effect: null | string;
 };
 
 type SelectedOption = {
@@ -161,29 +171,23 @@ type RaceRace = {
 };
 
 type Resistance = {
-	srNotes: string;
 	srOverride: null;
-	erNotes: string;
 	erOverride: unknown[];
-	drNotes: string;
-	drOverride: unknown[];
+	drOverride: DROverride[];
+};
+
+type DROverride = {
+	value: number;
+	damageType: string;
 };
 
 type Save = {
 	fortitudeOverride: null;
-	fortitudeNotes: string;
 	fortitudeCustomBonus: unknown[];
 	reflexOverride: null;
-	reflexNotes: string;
 	reflexCustomBonus: unknown[];
 	willOverride: null;
-	willNotes: string;
 	willCustomBonus: unknown[];
-};
-
-type Speed = {
-	override: unknown[];
-	notes: string;
 };
 
 type CharacterTheme = {
@@ -212,5 +216,4 @@ type Vitals = {
 type Hardness = {
 	damage: number;
 	override: null;
-	notes: string;
 };

@@ -1,9 +1,6 @@
-export function hephaistosQuery(characterId: string): string {
-	return (
-		`query {
-  characters(readOnlyPermalinkId: ["` +
-		characterId +
-		`"]) {
+export function hephaistosQuery(): string {
+	return `query($characterId:String!) {
+  characters(readOnlyPermalinkId: [$characterId]) {
     inventory {
       __typename
       ...on CharacterArmor {
@@ -360,6 +357,7 @@ export function hephaistosQuery(characterId: string): string {
     }
     classes{
         class{
+            armorProficiencyDescription
             armorProficiency
         }
     }
@@ -471,9 +469,9 @@ export function hephaistosQuery(characterId: string): string {
       }
     }
     name
+    readOnlyPermalinkId
   }
-}`
-	);
+}`;
 }
 
 export function graphQlTest(characterId: string): string {
@@ -482,7 +480,7 @@ export function graphQlTest(characterId: string): string {
   characters(readOnlyPermalinkId: ["` +
 		characterId +
 		`"]) {
-    name
+    readOnlyPermalinkId
     }
 }`
 	);
