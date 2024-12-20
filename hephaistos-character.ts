@@ -196,6 +196,10 @@ export class HephaistosCharacter {
 		return ac;
 	}
 
+	CMD(): number {
+		return 8 + this.ArmorClass("KAC");
+	}
+
 	protected calculateAbility(abilityName: Ability): number {
 		const lowercase3letter = lowercase3letterName(abilityName);
 		const override = this.data.abilityScores[lowercase3letter].override;

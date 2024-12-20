@@ -22,6 +22,7 @@ export async function UpdateCharacter(
 
 		frontmatter.EAC = character.ArmorClass("EAC");
 		frontmatter.KAC = character.ArmorClass("KAC");
+		frontmatter.CMD = character.CMD();
 
 		frontmatter.Str = character.AbilityScore("Str");
 		frontmatter.StrModifier = character.AbilityModifier("Str");
