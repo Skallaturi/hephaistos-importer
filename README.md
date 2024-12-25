@@ -10,6 +10,10 @@ Given the public ID for a number of Hephaistos characters (the number at the end
 
 If there is already a note with a character's name, the plugin wil update the frontmatter while leaving the rest of the note untouched.
 
+## Installation
+
+Download and unzip the plugin to your vault's `.obsidian/plugins` folder.
+
 ## Limitations
 
 This plugin is *not* intended to replace Hephaistos in any way. It is merely importing data for convenience's sake -- probably most useful for Game Masters.
