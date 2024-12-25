@@ -12,7 +12,7 @@ If there is already a note with a character's name, the plugin wil update the fr
 
 Creating a frontmatter entry with the name of another entry and ending in `_override` will cause the program to use that value instead.
 
-For instance you can force one character's `KAC` to be 15 by adding the frontmatter `KAC_override: 15`. Delete the override frontmatte to use the plugin's value again.
+For instance, you can force one character's `KAC` to be 15 by adding the frontmatter `KAC_override: 15`. Delete the override frontmatte to use the plugin's value again.
 
 ## Installation
 
