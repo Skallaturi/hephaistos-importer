@@ -20,24 +20,45 @@ export async function UpdateCharacter(
 	await app.fileManager.processFrontMatter(file, (frontmatter) => {
 		frontmatter.name = character.name();
 
-		frontmatter.EAC = character.ArmorClass("EAC");
-		frontmatter.KAC = character.ArmorClass("KAC");
-		frontmatter.CMD = character.CMD();
+		frontmatter.EAC =
+			frontmatter.EAC_override || character.ArmorClass("EAC");
+		frontmatter.KAC =
+			frontmatter.KAC_override || character.ArmorClass("KAC");
+		frontmatter.CMD = frontmatter.CMD_override || character.CMD();
 
-		frontmatter.Str = character.AbilityScore("Str");
-		frontmatter.StrModifier = character.AbilityModifier("Str");
-		frontmatter.Dex = character.AbilityScore("Dex");
-		frontmatter.DexModifier = character.AbilityModifier("Dex");
-		frontmatter.Con = character.AbilityScore("Con");
-		frontmatter.ConModifier = character.AbilityModifier("Con");
-		frontmatter.Int = character.AbilityScore("Int");
-		frontmatter.CntModifier = character.AbilityModifier("Int");
-		frontmatter.Wis = character.AbilityScore("Wis");
-		frontmatter.WisModifier = character.AbilityModifier("Wis");
-		frontmatter.Cha = character.AbilityScore("Cha");
-		frontmatter.ChaModifier = character.AbilityModifier("Cha");
+		frontmatter.Str =
+			frontmatter.Str_override || character.AbilityScore("Str");
+		frontmatter.StrModifier =
+			frontmatter.StrModifier_override ||
+			character.AbilityModifier("Str");
+		frontmatter.Dex =
+			frontmatter.Dex_override || character.AbilityScore("Dex");
+		frontmatter.DexModifier =
+			frontmatter.DexModifier_override ||
+			character.AbilityModifier("Dex");
+		frontmatter.Con =
+			frontmatter.Con_override || character.AbilityScore("Con");
+		frontmatter.ConModifier =
+			frontmatter.ConModifier_override ||
+			character.AbilityModifier("Con");
+		frontmatter.Int =
+			frontmatter.Int_override || character.AbilityScore("Int");
+		frontmatter.CntModifier =
+			frontmatter.CntModifier_override ||
+			character.AbilityModifier("Int");
+		frontmatter.Wis =
+			frontmatter.Wis_override || character.AbilityScore("Wis");
+		frontmatter.WisModifier =
+			frontmatter.WisModifier_override ||
+			character.AbilityModifier("Wis");
+		frontmatter.Cha =
+			frontmatter.Cha_override || character.AbilityScore("Cha");
+		frontmatter.ChaModifier =
+			frontmatter.ChaModifier_override ||
+			character.AbilityModifier("Cha");
 
-		frontmatter.conditions = character.conditions();
+		frontmatter.conditions =
+			frontmatter.conditions_override || character.conditions();
 
 		frontmatter.link = character.link();
 	});

@@ -3,6 +3,8 @@ import { Character as CharacterData } from "hephaistos-response";
 import { hephaistosQuery } from "hephaistos-query";
 import { HephaistosResponse } from "hephaistos-response";
 
+// This would probably be faster if we just imported all characters in one grapgQL call,
+//  but that makes error handling a bit trickier
 export async function importCharacter(
 	id: string
 ): Promise<HephaistosCharacter> {
