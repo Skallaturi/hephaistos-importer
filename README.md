@@ -24,7 +24,7 @@ This plugin is _not_ intended to replace Hephaistos in any way. It is merely imp
 
 ## Bugs
 
-Since I am essentially reverse-engineering Hephaistos' calculations, I am absolutely sure that I haven't caught every variable that might influence the stats. Bug reports on specific combinations that doesn't show up would be very welcome. For now, I just know that it works with my group's characters.
+Since I am essentially reverse-engineering Hephaistos' calculations, I am absolutely sure that I haven't caught every variable that might influence the stats. Bug reports on specific combinations that don't work (such as a feat that should add to KAC but doesn't) would be very welcome. For now, I just know that it works with my group's characters.
 
 ## Roadmap
 
