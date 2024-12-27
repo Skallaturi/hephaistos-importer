@@ -10,6 +10,7 @@ Given the public ID for a number of Hephaistos characters (the number at the end
 
 -   Name
 -   Hit Points, Stamina Points, and temporary HP
+-   Initiative
 -   KAC and EAC
 -   Ability scores and modifiers
 -   conditions
