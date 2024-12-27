@@ -191,7 +191,6 @@ export class HephaistosCharacter {
 				ac += armorBonus;
 			}
 		}
-		console.log(dexBonus);
 		//TODO overburdened / encumbered
 		ac += dexBonus;
 
@@ -200,6 +199,42 @@ export class HephaistosCharacter {
 
 	CMD(): number {
 		return 8 + this.ArmorClass("KAC");
+	}
+
+	MaxHitPoints(): number {
+		let hp = this.data.race.race.hitPoints;
+
+		for (const c of this.data.classes) {
+			hp += c.class.hitPoints * c.levels;
+		}
+
+		return hp;
+	}
+
+	CurrentHitPoints() {
+		const damage = this.data.vitals.health.damage;
+		return this.MaxHitPoints() - damage;
+	}
+
+	MaxStamina(): number {
+		let sp = 0;
+
+		for (const c of this.data.classes) {
+			sp +=
+				(c.class.baseStaminaPoints + this.AbilityModifier("Con")) *
+				c.levels;
+		}
+
+		return sp;
+	}
+
+	CurrentStamina() {
+		const damage = this.data.vitals.stamina.damage;
+		return this.MaxStamina() - damage;
+	}
+
+	TemporaryHitPoints() {
+		return this.data.vitals.temporary;
 	}
 
 	protected calculateAbility(abilityName: Ability): number {

@@ -20,6 +20,16 @@ export async function UpdateCharacter(
 	await app.fileManager.processFrontMatter(file, (frontmatter) => {
 		frontmatter.name = character.name();
 
+		frontmatter.HP =
+			frontmatter.HP_override || character.CurrentHitPoints();
+		frontmatter.MaxHP =
+			frontmatter.MaxHP_override || character.MaxHitPoints();
+		frontmatter.SP = frontmatter.SP_override || character.CurrentStamina();
+		frontmatter.MaxSP =
+			frontmatter.MaxSP_override || character.MaxStamina();
+		frontmatter.TempHP =
+			frontmatter.TempHP_override || character.TemporaryHitPoints();
+
 		frontmatter.EAC =
 			frontmatter.EAC_override || character.ArmorClass("EAC");
 		frontmatter.KAC =

@@ -4,9 +4,16 @@ A work-in-progress plugin for [Obsidian](https://obsidian.md) allowing for impor
 
 It is completely unaffiliated with either program and all thanks go to the dedicated programmers of those.
 
-## Functionality
+## Features
 
-Given the public ID for a number of Hephaistos characters (the number at the end of the public share link), clicking on the hammer icon will populate the selected Obsidian folder with a note for each character, filling the frontmatter with data such as KAC, EAC, Ability scores and conditions.
+Given the public ID for a number of Hephaistos characters (the number at the end of the public share link), clicking on the hammer icon will populate the selected Obsidian folder with a note for each character, filling the frontmatter with data for:
+
+-   Name
+-   Hit Points, Stamina Points, and temporary HP
+-   KAC and EAC
+-   Ability scores and modifiers
+-   conditions
+-   Link to public version of the character on Hephaistos
 
 If there is already a note with a character's name, the plugin wil update the frontmatter while leaving the rest of the note untouched.
 

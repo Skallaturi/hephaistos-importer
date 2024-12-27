@@ -356,7 +356,10 @@ export function hephaistosQuery(): string {
       }
     }
     classes{
+        levels
         class{
+            baseStaminaPoints
+            hitPoints
             armorProficiencyDescription
             armorProficiency
         }

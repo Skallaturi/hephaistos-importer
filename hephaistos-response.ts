@@ -69,10 +69,13 @@ type ArmorOverrideElement = {
 };
 
 type ClassElement = {
+	levels: number;
 	class: ClassClassClass;
 };
 
 type ClassClassClass = {
+	baseStaminaPoints: number;
+	hitPoints: number;
 	armorProficiencyDescription: string;
 	armorProficiency: string[];
 };
