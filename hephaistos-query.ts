@@ -356,9 +356,17 @@ export function hephaistosQuery(): string {
       }
     }
     classes{
+        levels
         class{
+            baseStaminaPoints
+            hitPoints
             armorProficiencyDescription
             armorProficiency
+        }
+    }
+    feats{
+        feat{
+            benefit
         }
     }
     conditions {
@@ -472,16 +480,4 @@ export function hephaistosQuery(): string {
     readOnlyPermalinkId
   }
 }`;
-}
-
-export function graphQlTest(characterId: string): string {
-	return (
-		`query {
-  characters(readOnlyPermalinkId: ["` +
-		characterId +
-		`"]) {
-    readOnlyPermalinkId
-    }
-}`
-	);
 }

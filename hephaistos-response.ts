@@ -25,6 +25,7 @@ export type Character = {
 	bonusRanks: number;
 	abilityScores: AbilityScores;
 	classes: ClassElement[];
+	feats: FeatElement[];
 	conditions: { [key: string]: Speed };
 	name: string;
 };
@@ -69,10 +70,13 @@ type ArmorOverrideElement = {
 };
 
 type ClassElement = {
+	levels: number;
 	class: ClassClassClass;
 };
 
 type ClassClassClass = {
+	baseStaminaPoints: number;
+	hitPoints: number;
 	armorProficiencyDescription: string;
 	armorProficiency: string[];
 };
@@ -216,4 +220,12 @@ type Vitals = {
 type Hardness = {
 	damage: number;
 	override: null;
+};
+
+type FeatElement = {
+	feat: FeatFeat;
+};
+
+type FeatFeat = {
+	benefit: null | string;
 };
