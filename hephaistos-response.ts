@@ -25,6 +25,7 @@ export type Character = {
 	bonusRanks: number;
 	abilityScores: AbilityScores;
 	classes: ClassElement[];
+	feats: FeatElement[];
 	conditions: { [key: string]: Speed };
 	name: string;
 };
@@ -219,4 +220,12 @@ type Vitals = {
 type Hardness = {
 	damage: number;
 	override: null;
+};
+
+type FeatElement = {
+	feat: FeatFeat;
+};
+
+type FeatFeat = {
+	benefit: null | string;
 };

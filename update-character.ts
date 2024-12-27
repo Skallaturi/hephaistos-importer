@@ -36,6 +36,9 @@ export async function UpdateCharacter(
 			frontmatter.KAC_override || character.ArmorClass("KAC");
 		frontmatter.CMD = frontmatter.CMD_override || character.CMD();
 
+		frontmatter.Initiative =
+			frontmatter.Initiative_override || character.Initiative();
+
 		frontmatter.Str =
 			frontmatter.Str_override || character.AbilityScore("Str");
 		frontmatter.StrModifier =

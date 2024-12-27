@@ -211,7 +211,7 @@ export class HephaistosCharacter {
 		return hp;
 	}
 
-	CurrentHitPoints() {
+	CurrentHitPoints(): number {
 		const damage = this.data.vitals.health.damage;
 		return this.MaxHitPoints() - damage;
 	}
@@ -228,13 +228,23 @@ export class HephaistosCharacter {
 		return sp;
 	}
 
-	CurrentStamina() {
+	CurrentStamina(): number {
 		const damage = this.data.vitals.stamina.damage;
 		return this.MaxStamina() - damage;
 	}
 
-	TemporaryHitPoints() {
+	TemporaryHitPoints(): number {
 		return this.data.vitals.temporary;
+	}
+
+	Initiative(): number {
+		let init = this.AbilityModifier("Dex");
+		for (const feat of this.data.feats) {
+			const effects = dragonscriptBonuses(feat.feat.benefit);
+			const initBonus = effects["initiative"];
+			if (initBonus) init += initBonus;
+		}
+		return init;
 	}
 
 	protected calculateAbility(abilityName: Ability): number {
@@ -265,10 +275,8 @@ export class HephaistosCharacter {
 			(o) => o.value
 		);
 		for (const benefit of benefits) {
-			const bonus = abilityBonusFromEffect(
-				benefit.effect || "",
-				abilityName
-			);
+			const baseEffects = dragonscriptBonuses(benefit.effect);
+			const bonus = abilityBonusFromRecord(baseEffects, abilityName);
 			score += bonus;
 
 			const options =
@@ -276,8 +284,9 @@ export class HephaistosCharacter {
 					selectedOptions.contains(o.id)
 				) || [];
 			for (const option of options) {
-				const optionBonus = abilityBonusFromEffect(
-					option.effect || "",
+				const optionEffects = dragonscriptBonuses(option.effect);
+				const optionBonus = abilityBonusFromRecord(
+					optionEffects,
 					abilityName
 				);
 				score += optionBonus;
@@ -303,8 +312,9 @@ export class HephaistosCharacter {
 			const adjustment = augmentation.augmentation?.options?.find(
 				(a) => a.id === selectedAdjustment
 			);
-			const bonus = abilityBonusFromEffect(
-				adjustment?.effect || "",
+			const augmentationBonuses = dragonscriptBonuses(adjustment?.effect);
+			const bonus = abilityBonusFromRecord(
+				augmentationBonuses,
 				abilityName
 			);
 			score += bonus;
@@ -323,40 +333,56 @@ export class HephaistosCharacter {
 	}
 
 	protected racialBonuses(): Partial<Record<Ability, number>> {
-		let result = {};
+		const result: Partial<Record<Ability, number>> = {};
 
 		const selectedAdjustment = this.data.race.selectedAdjustment;
 		const adjustments = this.data.race.race.abilityAdjustment.find(
 			(a) => a.id === selectedAdjustment
 		)?.effect;
 		if (!adjustments) return result;
-		result = dragonscriptAbilityBonuses(adjustments);
+		const allBonuses = dragonscriptBonuses(adjustments);
+		for (const key in allBonuses) {
+			try {
+				const normalizedName = normalizeAbilityName(key);
+				result[normalizedName] = allBonuses[key];
+			} catch (error) {
+				// was not ability. Carry on
+			}
+		}
 		return result;
 	}
 }
 
-// pull ability bonuses from a dragonscript effect
-function dragonscriptAbilityBonuses(
-	effect: string
-): Partial<Record<Ability, number>> {
+/** pull bonuses from a dragonscript effect.
+ * @returns a map with [lowercase statistic name]=bonus
+ */
+function dragonscriptBonuses(
+	effect: string | undefined | null
+): Record<string, number> {
 	const result: Record<string, number> = {};
+	if (!effect) return result;
 	const matches = effect.matchAll(/bonus (-*\d) to character.([a-z]+)/gm);
 	for (const match of matches) {
 		const bonus = match[1];
-		const ability = match[2];
-		try {
-			result[normalizeAbilityName(ability)] = Number.parseInt(bonus);
-		} catch (error) {
-			// was not ability
-		}
+		const statistic = match[2];
+		result[statistic.toLowerCase()] = Number.parseInt(bonus);
 	}
 	return result;
 }
 
-function abilityBonusFromEffect(effect: string, ability: Ability): number {
-	const abilityMap = dragonscriptAbilityBonuses(effect);
-	const bonus = abilityMap[ability] || 0;
-	return bonus;
+function abilityBonusFromRecord(
+	record: Record<string, number>,
+	ability: Ability
+): number {
+	for (const key in record) {
+		try {
+			const normalizedName = normalizeAbilityName(key);
+			if (normalizedName === ability) return record[key];
+		} catch (error) {
+			// was not ability. Carry on
+		}
+	}
+	return 0;
 }
 
 type ArmorClass = "EAC" | "KAC";

@@ -364,6 +364,11 @@ export function hephaistosQuery(): string {
             armorProficiency
         }
     }
+    feats{
+        feat{
+            benefit
+        }
+    }
     conditions {
       unconscious {
         override
@@ -475,16 +480,4 @@ export function hephaistosQuery(): string {
     readOnlyPermalinkId
   }
 }`;
-}
-
-export function graphQlTest(characterId: string): string {
-	return (
-		`query {
-  characters(readOnlyPermalinkId: ["` +
-		characterId +
-		`"]) {
-    readOnlyPermalinkId
-    }
-}`
-	);
 }
