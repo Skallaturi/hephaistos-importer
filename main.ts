@@ -1,6 +1,13 @@
-import { importCharacter } from "hephaistos-character";
-import { App, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
-import { UpdateCharacter } from "update-character";
+import { importCharacter } from "src/hephaistos-character";
+import {
+	App,
+	normalizePath,
+	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+} from "obsidian";
+import { UpdateCharacter } from "src/update-character";
 
 interface HephaistosImporterPluginSettings {
 	//ids of characters to import
@@ -25,23 +32,14 @@ export default class HephaistosImporter extends Plugin {
 			"hammer",
 			"Hephaistos Importer",
 			// Called when the user clicks the icon.
-			async (evt: MouseEvent) => {
-				for (const characterId of this.settings.characterIds) {
-					try {
-						const character = await importCharacter(characterId);
-						new Notice("imported " + character.name());
-
-						UpdateCharacter(
-							this.app,
-							character,
-							this.settings.charactersFolder
-						);
-					} catch (error) {
-						new Notice(error);
-					}
-				}
-			}
+			async (evt: MouseEvent) => this.importAll()
 		);
+
+		this.addCommand({
+			id: "import-all-characters",
+			name: "Import all characters",
+			callback: () => this.importAll(),
+		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new HephaistosImporterSettingTab(this.app, this));
@@ -56,6 +54,23 @@ export default class HephaistosImporter extends Plugin {
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
 		);
+	}
+
+	async importAll() {
+		for (const characterId of this.settings.characterIds) {
+			try {
+				const character = await importCharacter(characterId);
+				new Notice("imported " + character.name());
+
+				UpdateCharacter(
+					this.app,
+					character,
+					this.settings.charactersFolder
+				);
+			} catch (error) {
+				new Notice(error);
+			}
+		}
 	}
 
 	onunload() {}
@@ -108,7 +123,8 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 				text
 					.setValue(this.plugin.settings.charactersFolder)
 					.onChange(async (value) => {
-						this.plugin.settings.charactersFolder = value;
+						this.plugin.settings.charactersFolder =
+							normalizePath(value);
 						await this.plugin.saveSettings();
 					})
 			);
