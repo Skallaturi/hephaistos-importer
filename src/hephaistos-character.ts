@@ -1,7 +1,7 @@
 import { requestUrl } from "obsidian";
-import { Character as CharacterData } from "hephaistos-response";
-import { hephaistosQuery } from "hephaistos-query";
-import { HephaistosResponse } from "hephaistos-response";
+import { Character as CharacterData } from "src/hephaistos-response";
+import { hephaistosQuery } from "src/hephaistos-query";
+import { HephaistosResponse } from "src/hephaistos-response";
 
 // This would probably be faster if we just imported all characters in one grapgQL call,
 //  but that makes error handling a bit trickier

@@ -1,4 +1,4 @@
-import { HephaistosCharacter } from "hephaistos-character";
+import { HephaistosCharacter } from "src/hephaistos-character";
 import { App } from "obsidian";
 
 /** Update the character note in Obsidian */
@@ -10,8 +10,6 @@ export async function UpdateCharacter(
 	if (!app.vault.getFolderByPath(folderName)) {
 		app.vault.createFolder(folderName);
 	}
-
-	console.log(character);
 
 	const fileName = folderName + "/" + character.name() + ".md";
 	let file = app.vault.getFileByPath(fileName);
@@ -56,8 +54,8 @@ export async function UpdateCharacter(
 			character.AbilityModifier("Con");
 		frontmatter.Int =
 			frontmatter.Int_override || character.AbilityScore("Int");
-		frontmatter.CntModifier =
-			frontmatter.CntModifier_override ||
+		frontmatter.IntModifier =
+			frontmatter.IntModifier_override ||
 			character.AbilityModifier("Int");
 		frontmatter.Wis =
 			frontmatter.Wis_override || character.AbilityScore("Wis");
