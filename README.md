@@ -24,11 +24,11 @@ For instance, you can force a character's `KAC` to be 15 by adding the frontmatt
 
 ## Installation
 
-Download and unzip the plugin to your vault's `.obsidian/plugins` folder.
+From the `Releases` link, download `main.js` and `manifest.json`. Put them in a new folder in your vault's `.obsidian/plugins` folder.
 
 ## Limitations
 
-This plugin is _not_ intended to replace Hephaistos in any way. It is merely importing data for convenience's sake -- probably most useful for Game Masters.
+This plugin is _not_ intended to replace Hephaistos in any way. It is merely importing the most important data for convenience's sake -- probably most useful for Game Masters.
 
 ## Bugs
 
@@ -38,7 +38,6 @@ Since I am essentially reverse-engineering Hephaistos' calculations, I am absolu
 
 This is still a rough WIP, and my intended improvements are:
 
--   refinement of the existing data fields
--   HP and SP
--   Initiative
+-   Refinement of the existing data
+-   Other methods of stat allocation than Point Buy
 -   Any other ideas?
