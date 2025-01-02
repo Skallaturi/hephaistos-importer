@@ -18,7 +18,7 @@ interface HephaistosImporterPluginSettings {
 
 const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
 	characterIds: [],
-	charactersFolder: "",
+	charactersFolder: "Characters",
 };
 
 export default class HephaistosImporter extends Plugin {
