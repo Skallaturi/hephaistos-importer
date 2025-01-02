@@ -1,5 +1,5 @@
 import { HephaistosCharacter } from "src/hephaistos-character";
-import { App } from "obsidian";
+import { App, normalizePath } from "obsidian";
 
 /** Update the character note in Obsidian */
 export async function UpdateCharacter(
@@ -11,7 +11,7 @@ export async function UpdateCharacter(
 		app.vault.createFolder(folderName);
 	}
 
-	const fileName = folderName + "/" + character.name() + ".md";
+	const fileName = normalizePath(folderName + "/" + character.name() + ".md");
 	let file = app.vault.getFileByPath(fileName);
 	if (!file) file = await app.vault.create(fileName, "");
 
