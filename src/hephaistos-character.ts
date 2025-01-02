@@ -35,6 +35,7 @@ export async function importCharacter(
  */
 export class HephaistosCharacter {
 	constructor(data: CharacterData) {
+		data.name = data.name.trim();
 		this.data = data;
 	}
 	protected data: CharacterData;

@@ -18,7 +18,7 @@ interface HephaistosImporterPluginSettings {
 
 const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
 	characterIds: [],
-	charactersFolder: "",
+	charactersFolder: "Characters",
 };
 
 export default class HephaistosImporter extends Plugin {
@@ -111,7 +111,9 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 				text
 					.setValue(this.plugin.settings.characterIds.join(","))
 					.onChange(async (value) => {
-						this.plugin.settings.characterIds = value.split(",");
+						this.plugin.settings.characterIds = value
+							.replace(/[^\d,]/gm, "")
+							.split(",");
 						await this.plugin.saveSettings();
 					})
 			);
