@@ -7,7 +7,7 @@ import {
 	Setting,
 } from "obsidian";
 import { importCharacter } from "plugin/hephaistos-api";
-import { UpdateFrontmatter } from "plugin/update-frontmatter";
+import { UpdateFrontmatter } from "plugin/frontmatter";
 
 interface HephaistosImporterPluginSettings {
 	//ids of characters to import
@@ -57,7 +57,7 @@ export default class HephaistosImporter extends Plugin {
 					this.settings.charactersFolder
 				);
 			} catch (error) {
-				new Notice(error);
+				new Notice(error, 0);
 			}
 		}
 	}
