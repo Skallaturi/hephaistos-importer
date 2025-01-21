@@ -1,4 +1,3 @@
-import { importCharacter } from "src/hephaistos-character";
 import {
 	App,
 	normalizePath,
@@ -7,7 +6,8 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
-import { UpdateCharacter } from "src/update-character";
+import { importCharacter } from "plugin/hephaistos-api";
+import { UpdateFrontmatter } from "plugin/update-frontmatter";
 
 interface HephaistosImporterPluginSettings {
 	//ids of characters to import
@@ -49,9 +49,9 @@ export default class HephaistosImporter extends Plugin {
 		for (const characterId of this.settings.characterIds) {
 			try {
 				const character = await importCharacter(characterId);
-				new Notice("imported " + character.name());
+				new Notice("imported " + character.name);
 
-				UpdateCharacter(
+				UpdateFrontmatter(
 					this.app,
 					character,
 					this.settings.charactersFolder
