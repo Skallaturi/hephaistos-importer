@@ -14,7 +14,7 @@ export type Character = {
 	situationalBonuses: unknown[];
 	conditions: { [key: string]: Condition };
 	negativeLevels: NegativeLevels;
-	afflictions: unknown[];
+	afflictions: Affliction[];
 	abilityScores: AbilityScores;
 	skills: Skill[];
 	vitals: Vitals;
@@ -37,6 +37,19 @@ export type Character = {
 	counters: Counter[];
 	additionalSpells: unknown[];
 	drone: null;
+};
+
+type Affliction = {
+	id: string;
+	name: string;
+	notes: string;
+	track: string;
+	progression: Progression[];
+};
+
+type Progression = {
+	name: string;
+	description: string;
 };
 
 type AbilityScores = {
@@ -433,10 +446,7 @@ type Skill = {
 	notes: string;
 };
 
-type WelcomeSpeed = {
-	notes: string;
-	land: number;
-};
+type WelcomeSpeed = Record<string, unknown>;
 
 type Theme = {
 	name: string;

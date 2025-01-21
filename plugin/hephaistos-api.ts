@@ -20,6 +20,10 @@ export async function importCharacter(id: string): Promise<Character> {
 	);
 	if (!characterData)
 		throw new Error("could not access character with id " + id);
+	if (!characterData.json)
+		throw new Error(
+			`No JSON data found on for ${characterData.name}. The character needs to be saved at least once after 20th of January 2025`
+		);
 
 	const character = JSON.parse(characterData.json) as Character;
 	// Hephaistos doesn't trim excess spaces from name
@@ -49,5 +53,6 @@ type HephaistosData = {
 
 export type HephaistosCharacter = {
 	readOnlyPermalinkId: string;
+	name: string;
 	json: string;
 };
