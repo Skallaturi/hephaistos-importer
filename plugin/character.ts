@@ -18,8 +18,8 @@ export type Character = {
 	abilityScores: AbilityScores;
 	skills: Skill[];
 	vitals: Vitals;
-	speed: WelcomeSpeed;
-	initiative: Initiative;
+	speed: Speed;
+	initiative: Score;
 	armorClass: ArmorClass;
 	resistances: Resistances;
 	saves: Saves;
@@ -82,12 +82,12 @@ type ScoreBonusElement = {
 };
 
 type ArmorClass = {
-	eac: Initiative;
-	kac: Initiative;
-	acVsCombatManeuver: Initiative;
+	eac: Score;
+	kac: Score;
+	acVsCombatManeuver: Score;
 };
 
-type Initiative = {
+type Score = {
 	total: number;
 	override?: null;
 	bonuses?: unknown[];
@@ -106,9 +106,9 @@ type Ability =
 
 type AttackBonuses = {
 	bab: Bab;
-	melee: Initiative;
-	ranged: Initiative;
-	thrown: Initiative;
+	melee: Score;
+	ranged: Score;
+	thrown: Score;
 	otherBonuses: unknown[];
 };
 
@@ -119,7 +119,7 @@ type Bab = {
 };
 
 type Bulk = {
-	current: Initiative;
+	current: Score;
 	encumbered: Encumbered;
 	overburdened: Overburdened;
 };
@@ -414,17 +414,20 @@ type SelectedTraitSelectedOption = {
 };
 
 type Resistances = {
-	dr: DR;
-	er: DR;
+	dr: Record<string, Resistance>;
+	er: Record<string, Resistance>;
 	sr: number;
 };
 
-type DR = unknown;
+type Resistance = {
+	value: number;
+	sources: unknown;
+};
 
 type Saves = {
-	fortitude: Initiative;
-	reflex: Initiative;
-	will: Initiative;
+	fortitude: Score;
+	reflex: Score;
+	will: Score;
 };
 
 type Sense = {
@@ -446,7 +449,7 @@ type Skill = {
 	notes: string;
 };
 
-type WelcomeSpeed = Record<string, unknown>;
+type Speed = Record<string, string | number>;
 
 type Theme = {
 	name: string;
