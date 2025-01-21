@@ -30,13 +30,13 @@ function processFrontMatter(
 	frontmatter["hephaistos link"] =
 		"https://hephaistos.online/character/" + character.id;
 
-	frontmatter.abilitymods = {
-		str: modifier(character.abilityScores.strength.total),
-		dex: modifier(character.abilityScores.dexterity.total),
-		con: modifier(character.abilityScores.constitution.total),
-		int: modifier(character.abilityScores.intelligence.total),
-		wis: modifier(character.abilityScores.wisdom.total),
-		cha: modifier(character.abilityScores.charisma.total),
+	frontmatter.abilities = {
+		str: character.abilityScores.strength.total,
+		dex: character.abilityScores.dexterity.total,
+		con: character.abilityScores.constitution.total,
+		int: character.abilityScores.intelligence.total,
+		wis: character.abilityScores.wisdom.total,
+		cha: character.abilityScores.charisma.total,
 	};
 
 	const classes: Record<string, number> = {};
