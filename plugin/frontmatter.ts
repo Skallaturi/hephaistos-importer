@@ -4,6 +4,10 @@ import { Character } from "./character";
 type Frontmatter = {
 	name: string;
 	"hephaistos link": string;
+	gender: string;
+	homeworld: string;
+	deity: string;
+	alignment: string;
 	abilities: Record<string, number>;
 	race: string;
 	classes: Record<string, number>;
@@ -21,12 +25,16 @@ type Frontmatter = {
 	conditions: string[];
 	afflictions: Record<string, string>;
 	speed: Record<string, string>;
-	languages: string;
+	languages: string[];
 	senses: Record<string, string>;
 	skills: Record<string, string>;
 	feats: string[];
 	spells: string[];
+	weapons: string[];
+	armor?: string;
+	augmentations: string[];
 	inventory: string[];
+	"situational bonuses": string[];
 };
 
 /** Update the character note in Obsidian */
@@ -52,6 +60,10 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 	frontmatter.name = character.name;
 	frontmatter["hephaistos link"] =
 		"https://hephaistos.online/character/" + character.id;
+	frontmatter.gender = character.gender;
+	frontmatter.homeworld = character.homeworld;
+	frontmatter.deity = character.deity;
+	frontmatter.alignment = character.alignment;
 
 	frontmatter.abilities = {
 		strength: character.abilityScores.strength.total,
@@ -115,7 +127,7 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 		if (character.speed[key])
 			frontmatter.speed[key] = character.speed[key].toString();
 
-	frontmatter.languages = character.languages;
+	frontmatter.languages = character.languages.split(",");
 
 	frontmatter.senses = {};
 	for (const sense of character.senses)
@@ -130,12 +142,35 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 	);
 
 	frontmatter.spells = character.classes.flatMap((c) =>
-		c.spells.map((m) => m.name)
+		c.spells.map((m) => `[[${m.name}]]`)
 	);
 
-	frontmatter.inventory = character.inventory
-		.filter((f) => f.id !== "Unarmed Strike")
+	frontmatter.weapons = character.inventory
+		.filter((f) => f.type === "Weapon" && f.isEquipped)
 		.map((m) => `[[${m.name}]]`);
+
+	const armor = character.inventory.find(
+		(f) => f.type === "Armor" && f.isEquipped
+	);
+	frontmatter.armor = armor ? `[[${armor.name}]]` : undefined;
+
+	frontmatter.augmentations = character.inventory
+		.filter((f) => f.type === "Augmentation")
+		.map((m) => `[[${m.name}]]`);
+
+	frontmatter.inventory = character.inventory
+		.filter(
+			(f) =>
+				f.id !== "Unarmed Strike" &&
+				!(f.type === "Weapon" && f.isEquipped) &&
+				!(f.type === "Armor" && f.isEquipped) &&
+				!(f.type === "Augmentation")
+		)
+		.map((m) => `[[${m.name}]]`);
+
+	frontmatter["situational bonuses"] = character.situationalBonuses.map(
+		(m) => m.bonus
+	);
 }
 
 function modifier(input: number): string {

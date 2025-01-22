@@ -11,7 +11,7 @@ export type Character = {
 	quickNotes: string;
 	languages: string;
 	campaignNotes: string;
-	situationalBonuses: unknown[];
+	situationalBonuses: Bonus[];
 	conditions: { [key: string]: Condition };
 	negativeLevels: NegativeLevels;
 	afflictions: Affliction[];
@@ -50,6 +50,11 @@ type Affliction = {
 type Progression = {
 	name: string;
 	description: string;
+};
+
+type Bonus = {
+	bonus: string;
+	source: string;
 };
 
 type AbilityScores = {
