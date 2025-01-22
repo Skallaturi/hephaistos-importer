@@ -9,7 +9,9 @@ type Frontmatter = {
 	classes: Record<string, number>;
 	theme: string;
 	stamina: number;
+	"max stamina": number;
 	health: number;
+	"max health": number;
 	resistances: string[];
 	initiative: string;
 	EAC: number;
@@ -23,6 +25,7 @@ type Frontmatter = {
 	senses: Record<string, string>;
 	skills: Record<string, string>;
 	feats: string[];
+	spells: string[];
 	inventory: string[];
 };
 
@@ -61,16 +64,18 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 
 	frontmatter.race = character.race.name;
 
-	const classes: Record<string, number> = {};
-	for (const c of character.classes) classes[`[[${c.name}]]`] = c.levels;
-	frontmatter.classes = classes;
+	frontmatter.classes = {};
+	for (const c of character.classes)
+		frontmatter.classes[`[[${c.name}]]`] = c.levels;
 
 	frontmatter.theme = `[[${character.theme.name}]]`;
 
 	frontmatter.stamina =
 		character.vitals.stamina.max - character.vitals.stamina.damage;
+	frontmatter["max stamina"] = character.vitals.stamina.max;
 	frontmatter.health =
 		character.vitals.health.max - character.vitals.health.damage;
+	frontmatter["max health"] = character.vitals.health.max;
 
 	frontmatter.initiative = modifier(character.initiative.total);
 
@@ -84,46 +89,48 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 		will: modifier(character.saves.will.total),
 	};
 
-	const resistances = [];
+	frontmatter.resistances = [];
 	for (const key in character.resistances.dr)
-		resistances.push(`${character.resistances.dr[key]} / ${key} negates`);
+		frontmatter.resistances.push(
+			`${character.resistances.dr[key].value} / ${key} negates`
+		);
 	for (const key in character.resistances.er)
-		resistances.push(`${character.resistances.er[key]} vs ${key}`);
+		frontmatter.resistances.push(
+			`${character.resistances.er[key].value} vs ${key}`
+		);
 	if (character.resistances.sr !== 0)
-		resistances.push(`${character.resistances.sr} vs spells`);
-	frontmatter.resistances = resistances;
+		frontmatter.resistances.push(`${character.resistances.sr} vs spells`);
 
-	const conditions = [];
-	for (const key in character.conditions)
-		if (character.conditions[key].active)
-			conditions.push(`[[Conditions#${key}|${key}]]`);
-	frontmatter.conditions = conditions;
+	frontmatter.conditions = Object.keys(character.conditions)
+		.filter((f) => character.conditions[f].active)
+		.map((key) => `[[Conditions#${key}|${key}]]`);
 
-	const afflictions: Record<string, string> = {};
+	frontmatter.afflictions = {};
 	for (const affliction of character.afflictions)
-		afflictions[affliction.name] =
+		frontmatter.afflictions[affliction.name] =
 			affliction.progression.last()?.name || "";
-	frontmatter.afflictions = afflictions;
 
-	const speed: Record<string, string> = {};
+	frontmatter.speed = {};
 	for (const key in character.speed)
-		if (character.speed[key]) speed[key] = character.speed[key].toString();
-	frontmatter.speed = speed;
+		if (character.speed[key])
+			frontmatter.speed[key] = character.speed[key].toString();
 
 	frontmatter.languages = character.languages;
 
-	const senses: Record<string, string> = {};
+	frontmatter.senses = {};
 	for (const sense of character.senses)
-		senses[`[[${sense.senseType}]]`] = sense.range.toString();
-	frontmatter.senses = senses;
+		frontmatter.senses[`[[${sense.senseType}]]`] = sense.range.toString();
 
-	const skills: Record<string, string> = {};
+	frontmatter.skills = {};
 	for (const skill of character.skills)
-		skills[`[[${skill.skill}]]`] = modifier(skill.total);
-	frontmatter.skills = skills;
+		frontmatter.skills[`[[${skill.skill}]]`] = modifier(skill.total);
 
 	frontmatter.feats = character.feats.acquiredFeats.map(
 		(m) => `[[${m.name}]]`
+	);
+
+	frontmatter.spells = character.classes.flatMap((c) =>
+		c.spells.map((m) => m.name)
 	);
 
 	frontmatter.inventory = character.inventory

@@ -22,7 +22,7 @@ export async function importCharacter(id: string): Promise<Character> {
 		throw new Error("could not access character with id " + id);
 	if (!characterData.json)
 		throw new Error(
-			`No JSON data found on for ${characterData.name}. The character needs to be saved at least once after 20th of January 2025`
+			`No JSON data found on for ${characterData.name}. Try forcing a save on Hephaistos by e.g adding and then removing a point of damage`
 		);
 
 	const character = JSON.parse(characterData.json) as Character;
