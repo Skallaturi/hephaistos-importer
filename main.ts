@@ -93,18 +93,19 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Character IDs")
 			.setDesc(
-				"Public IDs of Hephaistos Characters to import, separated by comma.\n" +
+				"Public IDs of Hephaistos Characters to import, one Id per line." +
 					"The ID is the last part of the public URL, as found on Character -> edit -> share."
 			)
-			.addText((text) =>
-				text
-					.setValue(this.plugin.settings.characterIds.join(","))
-					.onChange(async (value) => {
-						this.plugin.settings.characterIds = value
-							.replace(/[^\d,]/gm, "")
-							.split(",");
-						await this.plugin.saveSettings();
-					})
+			.addTextArea(
+				(text) =>
+					(text
+						.setValue(this.plugin.settings.characterIds.join("\n"))
+						.onChange(async (value) => {
+							this.plugin.settings.characterIds = value
+								.replace(/[^\d\n]/gm, "")
+								.split("\n");
+							await this.plugin.saveSettings();
+						}).inputEl.rows = 10)
 			);
 
 		new Setting(containerEl)
