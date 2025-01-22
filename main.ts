@@ -8,18 +8,10 @@ import {
 } from "obsidian";
 import { importCharacter } from "plugin/hephaistos-api";
 import { UpdateFrontmatter } from "plugin/frontmatter";
-
-interface HephaistosImporterPluginSettings {
-	//ids of characters to import
-	characterIds: string[];
-	// folder containing character markdown files
-	charactersFolder: string;
-}
-
-const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
-	characterIds: [],
-	charactersFolder: "Characters",
-};
+import {
+	DEFAULT_SETTINGS,
+	HephaistosImporterPluginSettings,
+} from "plugin/settings";
 
 export default class HephaistosImporter extends Plugin {
 	settings: HephaistosImporterPluginSettings;
@@ -51,11 +43,7 @@ export default class HephaistosImporter extends Plugin {
 				const character = await importCharacter(characterId);
 				new Notice("imported " + character.name);
 
-				UpdateFrontmatter(
-					this.app,
-					character,
-					this.settings.charactersFolder
-				);
+				UpdateFrontmatter(this.app, character, this.settings);
 			} catch (error) {
 				new Notice(error, 0);
 			}
@@ -117,6 +105,20 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.charactersFolder =
 							normalizePath(value);
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Create links")
+			.setDesc(
+				"If checked, entries such as spell names will be created as Obsidian links rather than plain text."
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.createLinks)
+					.onChange(async (value) => {
+						this.plugin.settings.createLinks = value;
 						await this.plugin.saveSettings();
 					})
 			);

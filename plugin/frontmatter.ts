@@ -1,5 +1,6 @@
 import { App, normalizePath } from "obsidian";
 import { Character } from "./character";
+import { HephaistosImporterPluginSettings } from "./settings";
 
 type Frontmatter = {
 	name: string;
@@ -41,28 +42,42 @@ type Frontmatter = {
 export async function UpdateFrontmatter(
 	app: App,
 	character: Character,
-	folderName: string
+	settings: HephaistosImporterPluginSettings
 ) {
-	if (!app.vault.getFolderByPath(folderName)) {
-		app.vault.createFolder(folderName);
+	if (!app.vault.getFolderByPath(settings.charactersFolder)) {
+		app.vault.createFolder(settings.charactersFolder);
 	}
 
-	const fileName = normalizePath(folderName + "/" + character.name + ".md");
+	const fileName = normalizePath(
+		settings.charactersFolder + "/" + character.name + ".md"
+	);
 	let file = app.vault.getFileByPath(fileName);
 	if (!file) file = await app.vault.create(fileName, "");
 
 	await app.fileManager.processFrontMatter(file, (frontmatter: Frontmatter) =>
-		processFrontMatter(frontmatter, character)
+		processFrontMatter(frontmatter, character, settings)
 	);
 }
 
-function processFrontMatter(frontmatter: Frontmatter, character: Character) {
+function processFrontMatter(
+	frontmatter: Frontmatter,
+	character: Character,
+	settings: HephaistosImporterPluginSettings
+) {
+	const link = (text: string) =>
+		settings.createLinks && text ? `[[${text}]]` : text;
+
+	const linkToHeading = (file: string, heading: string) =>
+		settings.createLinks && heading
+			? `[[${file}#${heading}|${heading}]]`
+			: heading;
+
 	frontmatter.name = character.name;
 	frontmatter["hephaistos link"] =
 		"https://hephaistos.online/character/" + character.id;
 	frontmatter.gender = character.gender;
-	frontmatter.homeworld = character.homeworld;
-	frontmatter.deity = character.deity;
+	frontmatter.homeworld = link(character.homeworld);
+	frontmatter.deity = link(character.deity);
 	frontmatter.alignment = character.alignment;
 
 	frontmatter.abilities = {
@@ -78,9 +93,9 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 
 	frontmatter.classes = {};
 	for (const c of character.classes)
-		frontmatter.classes[`[[${c.name}]]`] = c.levels;
+		frontmatter.classes[link(c.name)] = c.levels;
 
-	frontmatter.theme = `[[${character.theme.name}]]`;
+	frontmatter.theme = link(character.theme.name);
 
 	frontmatter.stamina =
 		character.vitals.stamina.max - character.vitals.stamina.damage;
@@ -115,11 +130,11 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 
 	frontmatter.conditions = Object.keys(character.conditions)
 		.filter((f) => character.conditions[f].active)
-		.map((key) => `[[Conditions#${key}|${key}]]`);
+		.map((key) => linkToHeading("Conditions", key));
 
 	frontmatter.afflictions = {};
 	for (const affliction of character.afflictions)
-		frontmatter.afflictions[affliction.name] =
+		frontmatter.afflictions[link(affliction.name)] =
 			affliction.progression.last()?.name || "";
 
 	frontmatter.speed = {};
@@ -131,32 +146,30 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 
 	frontmatter.senses = {};
 	for (const sense of character.senses)
-		frontmatter.senses[`[[${sense.senseType}]]`] = sense.range.toString();
+		frontmatter.senses[link(sense.senseType)] = sense.range.toString();
 
 	frontmatter.skills = {};
 	for (const skill of character.skills)
-		frontmatter.skills[`[[${skill.skill}]]`] = modifier(skill.total);
+		frontmatter.skills[link(skill.skill)] = modifier(skill.total);
 
-	frontmatter.feats = character.feats.acquiredFeats.map(
-		(m) => `[[${m.name}]]`
-	);
+	frontmatter.feats = character.feats.acquiredFeats.map((m) => link(m.name));
 
 	frontmatter.spells = character.classes.flatMap((c) =>
-		c.spells.map((m) => `[[${m.name}]]`)
+		c.spells.map((m) => link(m.name))
 	);
 
 	frontmatter.weapons = character.inventory
 		.filter((f) => f.type === "Weapon" && f.isEquipped)
-		.map((m) => `[[${m.name}]]`);
+		.map((m) => link(m.name));
 
 	const armor = character.inventory.find(
 		(f) => f.type === "Armor" && f.isEquipped
 	);
-	frontmatter.armor = armor ? `[[${armor.name}]]` : undefined;
+	frontmatter.armor = armor ? link(armor.name) : undefined;
 
 	frontmatter.augmentations = character.inventory
 		.filter((f) => f.type === "Augmentation")
-		.map((m) => `[[${m.name}]]`);
+		.map((m) => link(m.name));
 
 	frontmatter.inventory = character.inventory
 		.filter(
@@ -166,7 +179,7 @@ function processFrontMatter(frontmatter: Frontmatter, character: Character) {
 				!(f.type === "Armor" && f.isEquipped) &&
 				!(f.type === "Augmentation")
 		)
-		.map((m) => `[[${m.name}]]`);
+		.map((m) => link(m.name));
 
 	frontmatter["situational bonuses"] = character.situationalBonuses.map(
 		(m) => m.bonus
