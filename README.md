@@ -11,7 +11,7 @@ It is completely unaffiliated with either program and all thanks go to the dedic
 Given the public ID for a number of Hephaistos characters (the number at the end of the public share link), clicking on the hammer icon will populate the selected Obsidian folder with a note for each character, filling the frontmatter with data for:
 
 -   name
--   link to hephaistos page
+-   hephaistos link
 -   gender
 -   homeworld
 -   deity
