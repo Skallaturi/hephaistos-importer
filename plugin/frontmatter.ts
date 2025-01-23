@@ -142,7 +142,7 @@ function processFrontMatter(
 		if (character.speed[key])
 			frontmatter.speed[key] = character.speed[key].toString();
 
-	frontmatter.languages = character.languages.split(",");
+	frontmatter.languages = character.languages.split(",").map((m) => m.trim());
 
 	frontmatter.senses = {};
 	for (const sense of character.senses)
