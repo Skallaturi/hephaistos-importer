@@ -1,6 +1,6 @@
 # Hephaistos Importer for Obsidian.md
 
-For Game Masters of the Starfinder RPG.
+For the Starfinder RPG.
 
 A plugin for [Obsidian](https://obsidian.md) allowing for import of characters from [Hephaistos](https://hephaistos.online).
 
