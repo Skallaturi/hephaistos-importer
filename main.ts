@@ -1,4 +1,3 @@
-import { importCharacter } from "src/hephaistos-character";
 import {
 	App,
 	normalizePath,
@@ -7,19 +6,12 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
-import { UpdateCharacter } from "src/update-character";
-
-interface HephaistosImporterPluginSettings {
-	//ids of characters to import
-	characterIds: string[];
-	// folder containing character markdown files
-	charactersFolder: string;
-}
-
-const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
-	characterIds: [],
-	charactersFolder: "Characters",
-};
+import { importCharacter } from "plugin/hephaistos-api";
+import { UpdateFrontmatter } from "plugin/frontmatter";
+import {
+	DEFAULT_SETTINGS,
+	HephaistosImporterPluginSettings,
+} from "plugin/settings";
 
 export default class HephaistosImporter extends Plugin {
 	settings: HephaistosImporterPluginSettings;
@@ -43,32 +35,17 @@ export default class HephaistosImporter extends Plugin {
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new HephaistosImporterSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, "click", (evt: MouseEvent) => {
-			console.log("click", evt);
-		});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(
-			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
-		);
 	}
 
 	async importAll() {
 		for (const characterId of this.settings.characterIds) {
 			try {
 				const character = await importCharacter(characterId);
-				new Notice("imported " + character.name());
+				new Notice("imported " + character.name);
 
-				UpdateCharacter(
-					this.app,
-					character,
-					this.settings.charactersFolder
-				);
+				UpdateFrontmatter(this.app, character, this.settings);
 			} catch (error) {
-				new Notice(error);
+				new Notice(error, 0);
 			}
 		}
 	}
@@ -104,18 +81,19 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Character IDs")
 			.setDesc(
-				"Public IDs of Hephaistos Characters to import, separated by comma.\n" +
+				"Public IDs of Hephaistos Characters to import, one Id per line." +
 					"The ID is the last part of the public URL, as found on Character -> edit -> share."
 			)
-			.addText((text) =>
-				text
-					.setValue(this.plugin.settings.characterIds.join(","))
-					.onChange(async (value) => {
-						this.plugin.settings.characterIds = value
-							.replace(/[^\d,]/gm, "")
-							.split(",");
-						await this.plugin.saveSettings();
-					})
+			.addTextArea(
+				(text) =>
+					(text
+						.setValue(this.plugin.settings.characterIds.join("\n"))
+						.onChange(async (value) => {
+							this.plugin.settings.characterIds = value
+								.replace(/[^\d\n]/gm, "")
+								.split("\n");
+							await this.plugin.saveSettings();
+						}).inputEl.rows = 10)
 			);
 
 		new Setting(containerEl)
@@ -127,6 +105,20 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.charactersFolder =
 							normalizePath(value);
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Create links")
+			.setDesc(
+				"If checked, entries such as spell names will be created as Obsidian links rather than plain text."
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.createLinks)
+					.onChange(async (value) => {
+						this.plugin.settings.createLinks = value;
 						await this.plugin.saveSettings();
 					})
 			);
