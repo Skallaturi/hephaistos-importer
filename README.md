@@ -70,6 +70,8 @@ I also want to provide some kind of css template for better access to the fields
 
 Developer of this plugin is Tore Sæderup.
 
+[Github](https://github.com/Skallaturi/hephaistos-importer)
+
 E-mail: tore@saederup.net
 
 Or tag @Skallaturi on the Obsidian Discord, Obsidian TTRPG Discord, or Starfinder Discord
