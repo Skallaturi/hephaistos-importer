@@ -65,3 +65,11 @@ The plugin utilizes a feature implemented in Hephaistos on 2025-01-20. It will f
 I plan to have this plugin integrate with other Starfinder projects for Obsidian. Please bring any to my knowledge.
 
 I also want to provide some kind of css template for better access to the fields. Maybe using another plugin.
+
+## Contact
+
+Developer of this plugin is Tore Sæderup.
+
+E-mail: tore@saederup.net
+
+Or tag @Skallaturi on the Obsidian Discord, Obsidian TTRPG Discord, or Starfinder Discord
