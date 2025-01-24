@@ -36,6 +36,12 @@ type Frontmatter = {
 	augmentations: string[];
 	inventory: string[];
 	"situational bonuses": string[];
+
+	// --- Initiative tracker fields
+	level?: number; // total level
+	hp?: number; // sum of health and stamina
+	ac?: string; // string with EAC and KAC
+	modifier?: number; // initiative modifier
 };
 
 /** Update the character note in Obsidian */
@@ -184,4 +190,18 @@ function processFrontMatter(
 	frontmatter["situational bonuses"] = character.situationalBonuses.map(
 		(m) => m.bonus
 	);
+
+	if (settings.enableInitiativeTracker) {
+		frontmatter.ac = `EAC ${character.armorClass.eac.total}, KAC ${character.armorClass.kac.total}`;
+		let totalLevel = 0;
+		for (const c of character.classes) totalLevel += c.levels;
+		frontmatter.level = totalLevel;
+		frontmatter.modifier = character.initiative.total;
+		frontmatter.hp =
+			character.vitals.health.max -
+			character.vitals.health.damage +
+			character.vitals.stamina.max -
+			character.vitals.stamina.damage +
+			character.vitals.temporary;
+	}
 }

@@ -122,5 +122,19 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		new Setting(containerEl)
+			.setName("Initiative Tracker support")
+			.setDesc(
+				"If checked, create entries usable by Javalent's Initiative Tracker."
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.enableInitiativeTracker)
+					.onChange(async (value) => {
+						this.plugin.settings.enableInitiativeTracker = value;
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 }
