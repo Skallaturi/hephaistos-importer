@@ -8,7 +8,7 @@ It is completely unaffiliated with either program and all thanks go to the dedic
 
 ## Features
 
-Given the public ID for a number of Hephaistos characters (the number at the end of the public share link), clicking on the hammer icon will populate the selected Obsidian folder with a note for each character, filling the frontmatter with data for:
+Given the public ID for a number of Hephaistos characters (the number at the end of the public share link), clicking on the anvil icon will populate the selected Obsidian folder with a note for each character, filling the frontmatter with data for:
 
 -   name
 -   hephaistos link

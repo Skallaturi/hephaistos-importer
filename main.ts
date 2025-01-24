@@ -21,7 +21,7 @@ export default class HephaistosImporter extends Plugin {
 
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon(
-			"hammer",
+			"anvil",
 			"Hephaistos Importer",
 			// Called when the user clicks the icon.
 			async (evt: MouseEvent) => this.importAll()
