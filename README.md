@@ -46,7 +46,24 @@ Given the public ID for a number of Hephaistos characters (the number at the end
 
 If there is already a note with a character's name, the plugin wil update the frontmatter while leaving the rest of the note untouched.
 
-Some fields, such as spell names, can be created either as plain text or Obsidian hyperlinks. This can be toggled in the settings. The links are based on the [Community SRD vault](https://github.com/Obsidian-TTRPG-Community/Starfinder-SRD-Markdown)
+### Hyperlinks
+
+_Enabled in settings_.
+
+Some fields, such as spell names, can be created either as plain text or Obsidian hyperlinks.
+The links are based on the [Community SRD vault](https://github.com/Obsidian-TTRPG-Community/Starfinder-SRD-Markdown)'s structure.
+
+### Initiative Tracker compatibility
+
+_Enabled in settings_.
+
+The importer can generate fields compatible with [Javalent's Initiative Tracker](https://github.com/javalent/initiative-tracker).
+These are:
+
+-   **level**: total level
+-   **hp**: sum of current health, current stamina, and temporary hp
+-   **ac** text with `EAC X, KAC Y`
+-   **modifier**: initiative modifier
 
 ## Installation
 

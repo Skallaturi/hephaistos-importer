@@ -18,17 +18,17 @@ type Frontmatter = {
 	health: number;
 	"max health": number;
 	resistances: string[];
-	initiative: string;
+	initiative: number;
 	EAC: number;
 	KAC: number;
 	CMD: number;
-	saves: Record<string, string>;
+	saves: Record<string, number>;
 	conditions: string[];
 	afflictions: Record<string, string>;
 	speed: Record<string, string>;
 	languages: string[];
 	senses: Record<string, string>;
-	skills: Record<string, string>;
+	skills: Record<string, number>;
 	feats: string[];
 	spells: string[];
 	weapons: string[];
@@ -36,6 +36,12 @@ type Frontmatter = {
 	augmentations: string[];
 	inventory: string[];
 	"situational bonuses": string[];
+
+	// --- Initiative tracker fields
+	level?: number; // total level
+	hp?: number; // sum of health and stamina
+	ac?: string; // string with EAC and KAC
+	modifier?: number; // initiative modifier
 };
 
 /** Update the character note in Obsidian */
@@ -104,16 +110,16 @@ function processFrontMatter(
 		character.vitals.health.max - character.vitals.health.damage;
 	frontmatter["max health"] = character.vitals.health.max;
 
-	frontmatter.initiative = modifier(character.initiative.total);
+	frontmatter.initiative = character.initiative.total;
 
 	frontmatter.EAC = character.armorClass.eac.total;
 	frontmatter.KAC = character.armorClass.kac.total;
 	frontmatter.CMD = character.armorClass.acVsCombatManeuver.total;
 
 	frontmatter.saves = {
-		fortitude: modifier(character.saves.fortitude.total),
-		reflex: modifier(character.saves.reflex.total),
-		will: modifier(character.saves.will.total),
+		fortitude: character.saves.fortitude.total,
+		reflex: character.saves.reflex.total,
+		will: character.saves.will.total,
 	};
 
 	frontmatter.resistances = [];
@@ -150,7 +156,7 @@ function processFrontMatter(
 
 	frontmatter.skills = {};
 	for (const skill of character.skills)
-		frontmatter.skills[link(skill.skill)] = modifier(skill.total);
+		frontmatter.skills[link(skill.skill)] = skill.total;
 
 	frontmatter.feats = character.feats.acquiredFeats.map((m) => link(m.name));
 
@@ -184,9 +190,18 @@ function processFrontMatter(
 	frontmatter["situational bonuses"] = character.situationalBonuses.map(
 		(m) => m.bonus
 	);
-}
 
-function modifier(input: number): string {
-	if (input >= 0) return "+" + input;
-	return input.toString();
+	if (settings.enableInitiativeTracker) {
+		frontmatter.ac = `EAC ${character.armorClass.eac.total}, KAC ${character.armorClass.kac.total}`;
+		let totalLevel = 0;
+		for (const c of character.classes) totalLevel += c.levels;
+		frontmatter.level = totalLevel;
+		frontmatter.modifier = character.initiative.total;
+		frontmatter.hp =
+			character.vitals.health.max -
+			character.vitals.health.damage +
+			character.vitals.stamina.max -
+			character.vitals.stamina.damage +
+			character.vitals.temporary;
+	}
 }
