@@ -17,6 +17,7 @@ type Frontmatter = {
 	"max stamina": number;
 	health: number;
 	"max health": number;
+	resolve: number;
 	resistances: string[];
 	initiative: number;
 	EAC: number;
@@ -109,6 +110,9 @@ function processFrontMatter(
 	frontmatter.health =
 		character.vitals.health.max - character.vitals.health.damage;
 	frontmatter["max health"] = character.vitals.health.max;
+
+	frontmatter.resolve =
+		character.vitals.resolve.max - character.vitals.resolve.damage;
 
 	frontmatter.initiative = character.initiative.total;
 
