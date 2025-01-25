@@ -159,11 +159,11 @@ function processFrontMatter(
 
 	frontmatter.senses = {};
 	for (const sense of character.senses)
-		frontmatter.senses[link(sense.senseType)] = sense.range.toString();
+		frontmatter.senses[sense.senseType] = sense.range.toString();
 
 	frontmatter.skills = {};
 	for (const skill of character.skills)
-		frontmatter.skills[link(skill.skill)] = skill.total;
+		frontmatter.skills[skill.skill] = skill.total;
 
 	frontmatter.feats = character.feats.acquiredFeats.map((m) => link(m.name));
 
