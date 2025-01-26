@@ -136,5 +136,19 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		new Setting(containerEl)
+			.setName("Fantasy Statblocks support")
+			.setDesc(
+				"If checked, use a format more easily accessed by Javalent's Fantasy Statblocks."
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.statblocksFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.statblocksFormat = value;
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 }

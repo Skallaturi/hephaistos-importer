@@ -1,6 +1,13 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { App, normalizePath } from "obsidian";
 import { Character } from "./character";
 import { HephaistosImporterPluginSettings } from "./settings";
+
+// used by Fantasy Statblocks
+type WrappedString = {
+	name: string;
+	desc: string;
+};
 
 type Frontmatter = {
 	name: string;
@@ -9,9 +16,9 @@ type Frontmatter = {
 	homeworld: string;
 	deity: string;
 	alignment: string;
-	abilities: Record<string, number>;
+	abilities: Record<string, number>[];
 	race: string;
-	classes: Record<string, number>;
+	classes: Record<string, number>[] | WrappedString[];
 	theme: string;
 	stamina: number;
 	"max stamina": number;
@@ -23,13 +30,13 @@ type Frontmatter = {
 	EAC: number;
 	KAC: number;
 	CMD: number;
-	saves: Record<string, number>;
+	saves: Record<string, number>[];
 	conditions: string[];
-	afflictions: Record<string, string>;
-	speed: Record<string, string>;
+	afflictions: Record<string, string>[] | WrappedString[];
+	speed: Record<string, number>[] | string;
 	languages: string[];
-	senses: Record<string, string>;
-	skills: Record<string, number>;
+	senses: Record<string, string>[] | WrappedString[];
+	skills: Record<string, number>[] | WrappedString[];
 	feats: string[];
 	spells: string[];
 	weapons: string[];
@@ -87,20 +94,24 @@ function processFrontMatter(
 	frontmatter.deity = link(character.deity);
 	frontmatter.alignment = character.alignment;
 
-	frontmatter.abilities = {
-		strength: character.abilityScores.strength.total,
-		dexterity: character.abilityScores.dexterity.total,
-		constitution: character.abilityScores.constitution.total,
-		intelligence: character.abilityScores.intelligence.total,
-		wisdom: character.abilityScores.wisdom.total,
-		charisma: character.abilityScores.charisma.total,
-	};
+	frontmatter.abilities = [
+		{ strength: character.abilityScores.strength.total },
+		{ dexterity: character.abilityScores.dexterity.total },
+		{ constitution: character.abilityScores.constitution.total },
+		{ intelligence: character.abilityScores.intelligence.total },
+		{ wisdom: character.abilityScores.wisdom.total },
+		{ charisma: character.abilityScores.charisma.total },
+	];
 
-	frontmatter.race = character.race.name;
+	frontmatter.race = link(character.race.name);
 
-	frontmatter.classes = {};
-	for (const c of character.classes)
-		frontmatter.classes[link(c.name)] = c.levels;
+	frontmatter.classes = settings.statblocksFormat
+		? character.classes.map((m) => {
+				return { name: m.name, desc: m.levels.toString() };
+		  })
+		: character.classes.map((m) => {
+				return { [link(m.name)]: m.levels };
+		  });
 
 	frontmatter.theme = link(character.theme.name);
 
@@ -120,11 +131,11 @@ function processFrontMatter(
 	frontmatter.KAC = character.armorClass.kac.total;
 	frontmatter.CMD = character.armorClass.acVsCombatManeuver.total;
 
-	frontmatter.saves = {
-		fortitude: character.saves.fortitude.total,
-		reflex: character.saves.reflex.total,
-		will: character.saves.will.total,
-	};
+	frontmatter.saves = [
+		{ fortitude: character.saves.fortitude.total },
+		{ reflex: character.saves.reflex.total },
+		{ will: character.saves.will.total },
+	];
 
 	frontmatter.resistances = [];
 	for (const key in character.resistances.dr)
@@ -142,28 +153,63 @@ function processFrontMatter(
 		.filter((f) => character.conditions[f].active)
 		.map((key) => linkToHeading("Conditions", key));
 
-	frontmatter.afflictions = {};
-	for (const affliction of character.afflictions)
-		frontmatter.afflictions[link(affliction.name)] =
-			affliction.progression.last()?.name || "";
+	frontmatter.afflictions = settings.statblocksFormat
+		? character.afflictions.map((affliction) => {
+				return {
+					name: link(affliction.name),
+					desc: affliction.progression.last()?.name || "",
+				};
+		  })
+		: character.afflictions.map((affliction) => {
+				return {
+					[link(affliction.name)]:
+						affliction.progression.last()?.name || "",
+				};
+		  });
 
-	frontmatter.speed = {};
-	for (const key in character.speed)
-		if (character.speed[key])
-			frontmatter.speed[key] = character.speed[key].toString();
+	frontmatter.speed = settings.statblocksFormat
+		? Object.keys(character.speed)
+				.filter((f) => typeof character.speed[f] === "number")
+				.map((key) => {
+					return `${key}: ${character.speed[key]}`.toString();
+				})
+				.join(", ")
+		: Object.keys(character.speed)
+				.filter((f) => typeof character.speed[f] === "number")
+				.map((key) => {
+					return { [key]: character.speed[key] as number };
+				});
 
 	frontmatter.languages = character.languages
 		.split(",")
 		.map((m) => m.trim())
 		.filter((f) => f);
 
-	frontmatter.senses = {};
-	for (const sense of character.senses)
-		frontmatter.senses[sense.senseType] = sense.range.toString();
+	frontmatter.senses = settings.statblocksFormat
+		? character.senses.map((sense) => {
+				return {
+					name: sense.senseType,
+					desc: sense.range.toString(),
+				};
+		  })
+		: character.senses.map((sense) => {
+				return {
+					[sense.senseType]: sense.range.toString(),
+				};
+		  });
 
-	frontmatter.skills = {};
-	for (const skill of character.skills)
-		frontmatter.skills[skill.skill] = skill.total;
+	frontmatter.skills = settings.statblocksFormat
+		? character.skills.map((skill) => {
+				return {
+					name: skill.skill,
+					desc: skill.total.toString(),
+				};
+		  })
+		: character.skills.map((skill) => {
+				return {
+					[skill.skill]: skill.total,
+				};
+		  });
 
 	frontmatter.feats = character.feats.acquiredFeats.map((m) => link(m.name));
 
