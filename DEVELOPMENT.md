@@ -14,6 +14,10 @@ From https://publish.obsidian.md/hub/04+-+Guides%2C+Workflows%2C+%26+Courses/Gui
 
 # Version history
 
+## Version 2.1.0
+
+Added compatibility with Javalent's Initiative Tracker and Fantasy Statblock.
+
 ## Version 2.0.0
 
 Since Hephaistos made the JSON available from the API, The plugin was redesigned from scratch.
