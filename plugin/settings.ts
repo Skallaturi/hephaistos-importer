@@ -5,8 +5,10 @@ export interface HephaistosImporterPluginSettings {
 	charactersFolder: string;
 	// should data be added as Obsidian links rather than strings
 	createLinks: boolean;
-	// create initiative tracker fields
+	// create Initiative Tracker fields
 	enableInitiativeTracker: boolean;
+	// format for Fantasy Statblocks
+	statblocksFormat: boolean;
 }
 
 export const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
@@ -14,4 +16,5 @@ export const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
 	charactersFolder: "Characters",
 	createLinks: false,
 	enableInitiativeTracker: false,
+	statblocksFormat: false,
 };
