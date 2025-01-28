@@ -38,7 +38,7 @@ type Frontmatter = {
 	senses: Record<string, string>[] | WrappedString[];
 	skills: Record<string, number>[] | WrappedString[];
 	feats: string[];
-	spells: string[];
+	spells: Record<string, string[]>[] | Record<string, string>[];
 	weapons: string[];
 	armor?: string;
 	augmentations: string[];
@@ -213,9 +213,42 @@ function processFrontMatter(
 
 	frontmatter.feats = character.feats.acquiredFeats.map((m) => link(m.name));
 
-	frontmatter.spells = character.classes.flatMap((c) =>
-		c.spells.map((m) => link(m.name))
-	);
+	const spellsPerDay = [0, 0, 0, 0, 0, 0, 0];
+	// hephaistos uses -1 spell per day as "at will"
+	for (const c of character.classes) {
+		for (const i in c.spellsPerDay) {
+			if (c.spellsPerDay[i] === -1 || spellsPerDay[i] === -1)
+				spellsPerDay[i] = -1;
+			else spellsPerDay[i] = spellsPerDay[i] + c.spellsPerDay[i];
+		}
+	}
+
+	const spells: Record<string, string[]> = {};
+	for (const spell of character.classes.flatMap((c) => c.spells)) {
+		const level = spell.level.first()?.level ?? 0;
+		const label =
+			`level ${level}` +
+			(spellsPerDay[level] === -1
+				? " (at will)"
+				: ` (${spellsPerDay[level]}/day)`);
+		if (!spells[label]) spells[label] = [];
+		spells[label].push(spell.name);
+	}
+	frontmatter.spells = settings.statblocksFormat
+		? Object.keys(spells)
+				.sort()
+				.map((key) => {
+					return {
+						[key]: `${spells[key]
+							.map((spell) => link(spell))
+							.join(", ")}`,
+					};
+				})
+		: Object.keys(spells)
+				.sort()
+				.map((key) => {
+					return { [key]: spells[key].map((spell) => link(spell)) };
+				});
 
 	frontmatter.weapons = character.inventory
 		.filter((f) => f.type === "Weapon" && f.isEquipped)
