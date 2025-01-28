@@ -65,9 +65,19 @@ These are:
 -   **ac** text with `EAC X, KAC Y`
 -   **modifier**: initiative modifier
 
+### Fantasy Statblocks compatibility
+
+_Enabled in settings_.
+
+The importer can format fields to work with [Javalent's Fantasy Statblocks](https://github.com/javalent/fantasy-statblocks).
+
+A simple statblock file, modified from [TheNightMayor](https://github.com/TheNightMayor)'s Starfinder bestiary layout, can be found [here](assets/starfinder-character-layout.json).
+
 ## Installation
 
-Install via the Obsidian Community Plug-ins.
+~~Install via the Obsidian Community Plug-ins~~ when released into the community.
+
+For now, create a folder in your obsidian vault's `.obsidian/plugins/` folder and download the `main.js`and `manifest.json` files from the latest github release into it.
 
 ## Limitations
 
@@ -84,8 +94,6 @@ I plan to have this plugin integrate with other Starfinder projects for Obsidian
 I also want to provide some kind of css template for better access to the fields. Maybe using another plugin.
 
 ## Contact
-
-Developer of this plugin is Tore Sæderup.
 
 [Github](https://github.com/Skallaturi/hephaistos-importer)
 
