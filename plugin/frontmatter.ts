@@ -78,8 +78,19 @@ function processFrontMatter(
 	character: Character,
 	settings: HephaistosImporterPluginSettings
 ) {
-	const link = (text: string) =>
-		settings.createLinks && text ? `[[${text}]]` : text;
+	const link = (text: string) => {
+		if (!(settings.createLinks && text)) return text;
+
+		// in the SRD vault, note links do not contain parantheses
+		let link = text.replace(/(\(|\))/gm, "");
+
+		// in the SRD vault, items like "Reaction Cannon, light" is in the note "Reaction Cannon" under heading "Reaction Cannon, light"
+		if (link.contains(",")) {
+			const arr = link.split(",");
+			link = `${arr[0].trim()}#${text}|${text}`;
+		}
+		return `[[${link}]]`;
+	};
 
 	const linkToHeading = (file: string, heading: string) =>
 		settings.createLinks && heading
