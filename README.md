@@ -8,41 +8,23 @@ It is completely unaffiliated with either program and all thanks go to the dedic
 
 ## Features
 
-Given the public ID for a number of Hephaistos characters (the number at the end of the public share link), clicking on the **anvil** icon will populate the selected Obsidian folder with a note for each character, filling the frontmatter with data for:
+Given the public ID for a number of Hephaistos characters (the number at the end of the public share link), clicking on the **anvil** icon will populate the selected Obsidian folder with a note for each character, filling the frontmatter with data from Hephaistos, such as:
 
--   name
--   hephaistos link
--   gender
--   homeworld
--   deity
--   alignment
--   abilities
--   race
--   classes
--   theme
--   stamina
--   max stamina
--   health
--   max health
--   resistances
--   initiative
--   EAC
--   KAC
--   CMD
--   saves
--   conditions
--   afflictions
--   speed
--   languages
--   senses
--   skills
--   feats
--   spells
--   weapons
--   armor
--   augmentations
--   inventory
--   situational bonuses
+```
+name: Mila Imarin
+hephaistos link: https://hephaistos.online/character/779575002
+abilities:
+  - strength: 10
+  - dexterity: 14
+  - constitution: 12
+  - intelligence: 15
+  - wisdom: 10
+  - charisma: 21
+race: Human
+classes:
+  - Witchwarper: 5
+```
+etc.
 
 If there is already a note with a character's name, the plugin wil update the frontmatter while leaving the rest of the note untouched.
 
