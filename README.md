@@ -73,8 +73,6 @@ The plugin utilizes a feature implemented in Hephaistos on 2025-01-20. It will f
 
 I plan to have this plugin integrate with other Starfinder projects for Obsidian. Please bring any to my knowledge.
 
-I also want to provide some kind of css template for better access to the fields. Maybe using another plugin.
-
 ## Contact
 
 [Github](https://github.com/Skallaturi/hephaistos-importer)
