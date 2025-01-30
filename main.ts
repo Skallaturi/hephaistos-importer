@@ -91,7 +91,8 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 						.onChange(async (value) => {
 							this.plugin.settings.characterIds = value
 								.replace(/[^\d\n]/gm, "")
-								.split("\n");
+								.split("\n")
+								.filter((f) => f);
 							await this.plugin.saveSettings();
 						}).inputEl.rows = 10)
 			);
