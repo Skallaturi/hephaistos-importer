@@ -78,12 +78,15 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
+		const IdDescription = document.createDocumentFragment();
+		IdDescription.append(
+			"Public IDs of Hephaistos Characters to import, one Id per line.",
+			document.createElement("br"),
+			"The ID is the last part of the public URL, as found on Character -> edit -> share."
+		);
 		new Setting(containerEl)
 			.setName("Character IDs")
-			.setDesc(
-				"Public IDs of Hephaistos Characters to import, one Id per line." +
-					"The ID is the last part of the public URL, as found on Character -> edit -> share."
-			)
+			.setDesc(IdDescription)
 			.addTextArea(
 				(text) =>
 					(text
@@ -124,11 +127,19 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					})
 			);
 
+		const initiativeTrackerLink = document.createElement("a");
+		initiativeTrackerLink.href =
+			"https://github.com/javalent/initiative-tracker";
+		initiativeTrackerLink.innerHTML = "Javalent's Initiative Tracker";
+		const initiativeTrackerDescription = document.createDocumentFragment();
+		initiativeTrackerDescription.append(
+			"If checked, create entries usable by ",
+			initiativeTrackerLink,
+			"."
+		);
 		new Setting(containerEl)
 			.setName("Initiative Tracker support")
-			.setDesc(
-				"If checked, create entries usable by Javalent's Initiative Tracker."
-			)
+			.setDesc(initiativeTrackerDescription)
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.enableInitiativeTracker)
@@ -138,11 +149,26 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					})
 			);
 
+		const statblocksLink = document.createElement("a");
+		statblocksLink.href = "https://github.com/javalent/fantasy-statblocks";
+		statblocksLink.innerHTML = "Javalent's Fantasy Statblocks";
+		const templateLink = document.createElement("a");
+		templateLink.href =
+			"https://github.com/Skallaturi/hephaistos-importer/blob/master/assets/starfinder-character-layout.json";
+		templateLink.innerHTML = "here";
+		const statblocksDesc = document.createDocumentFragment();
+		statblocksDesc.append(
+			"If checked, use a format more easily accessed by ",
+			statblocksLink,
+			".",
+			document.createElement("br"),
+			"A sample template can be found ",
+			templateLink,
+			"."
+		);
 		new Setting(containerEl)
 			.setName("Fantasy Statblocks support")
-			.setDesc(
-				"If checked, use a format more easily accessed by Javalent's Fantasy Statblocks."
-			)
+			.setDesc(statblocksDesc)
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.statblocksFormat)
