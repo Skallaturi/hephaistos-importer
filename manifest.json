@@ -1,7 +1,7 @@
 {
 	"id": "hephaistos-importer",
 	"name": "Hephaistos Importer",
-	"version": "2.1.0-dev",
+	"version": "2.1.0",
 	"minAppVersion": "1.6.0",
 	"description": "Imports main stats from the Starfinder RPG character website Hephaistos.",
 	"author": "Skallaturi",

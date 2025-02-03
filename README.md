@@ -24,6 +24,7 @@ race: Human
 classes:
   - Witchwarper: 5
 ```
+
 etc.
 
 If there is already a note with a character's name, the plugin wil update the frontmatter while leaving the rest of the note untouched.
@@ -57,9 +58,11 @@ A simple statblock file, modified from [TheNightMayor](https://github.com/TheNig
 
 ## Installation
 
-~~Install via the Obsidian Community Plug-ins~~ when released into the community.
+Install via the Obsidian Community Plug-ins.
 
-For now, create a folder in your obsidian vault's `.obsidian/plugins/` folder and download the `main.js`and `manifest.json` files from the latest github release into it.
+### Manual installation
+
+Create a folder in your obsidian vault's `.obsidian/plugins/` folder and download the `main.js`and `manifest.json` files from the latest github release into it. You can find the latest Github release under `Releases` to the right on the plugin's github page.
 
 ## Limitations
 
@@ -67,7 +70,7 @@ This plugin is _not_ intended to replace Hephaistos in any way. It is merely imp
 
 ## Bugs
 
-The plugin utilizes a feature implemented in Hephaistos on 2025-01-20. It will fail to import characters who haven't been saved since then. To update a character, simply appply a point of damage and remove it again.
+The plugin utilizes a feature implemented in Hephaistos on the 3rd of February 2025. It will fail to import characters who haven't been saved since then. To update a character, simply appply a point of damage and remove it again.
 
 ## Future
 
