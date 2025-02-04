@@ -127,14 +127,13 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					})
 			);
 
-		const initiativeTrackerLink = document.createElement("a");
-		initiativeTrackerLink.href =
-			"https://github.com/javalent/initiative-tracker";
-		initiativeTrackerLink.innerHTML = "Javalent's Initiative Tracker";
 		const initiativeTrackerDescription = document.createDocumentFragment();
 		initiativeTrackerDescription.append(
 			"If checked, create entries usable by ",
-			initiativeTrackerLink,
+			containerEl.createEl("a", {
+				href: "https://github.com/javalent/initiative-tracker",
+				text: "Javalent's Initiative Tracker",
+			}),
 			"."
 		);
 		new Setting(containerEl)
@@ -149,21 +148,20 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					})
 			);
 
-		const statblocksLink = document.createElement("a");
-		statblocksLink.href = "https://github.com/javalent/fantasy-statblocks";
-		statblocksLink.innerHTML = "Javalent's Fantasy Statblocks";
-		const templateLink = document.createElement("a");
-		templateLink.href =
-			"https://github.com/Skallaturi/hephaistos-importer/blob/master/assets/starfinder-character-layout.json";
-		templateLink.innerHTML = "here";
 		const statblocksDesc = document.createDocumentFragment();
 		statblocksDesc.append(
 			"If checked, use a format more easily accessed by ",
-			statblocksLink,
+			containerEl.createEl("a", {
+				href: "https://github.com/javalent/fantasy-statblocks",
+				text: "Javalent's Fantasy Statblocks",
+			}),
 			".",
-			document.createElement("br"),
+			containerEl.createEl("br"),
 			"A sample template can be found ",
-			templateLink,
+			containerEl.createEl("a", {
+				href: "https://github.com/Skallaturi/hephaistos-importer/blob/master/assets/starfinder-character-layout.json",
+				text: "here",
+			}),
 			"."
 		);
 		new Setting(containerEl)
