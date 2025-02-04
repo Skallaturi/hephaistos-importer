@@ -29,6 +29,8 @@ etc.
 
 If there is already a note with a character's name, the plugin wil update the frontmatter while leaving the rest of the note untouched.
 
+Frontmatter will only be updated, not replaced. If you have other frontmatter entries, such as `cssclasses`, those will remain unaffected by the plugin.
+
 ### Hyperlinks
 
 _Enabled in settings_.
@@ -55,6 +57,8 @@ _Enabled in settings_.
 The importer can format fields to work with [Javalent's Fantasy Statblocks](https://github.com/javalent/fantasy-statblocks).
 
 A simple statblock file, modified from [TheNightMayor](https://github.com/TheNightMayor)'s Starfinder bestiary layout, can be found [here](assets/starfinder-character-layout.json).
+
+You will need to add the properties `statblocks: true` and `layout: Starfinder Character Layout` (or whatever layout you prefer) to the frontmatter for the character to be parsed correctly by Fantasy Statblocks.
 
 ## Installation
 
