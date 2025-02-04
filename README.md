@@ -58,7 +58,7 @@ The importer can format fields to work with [Javalent's Fantasy Statblocks](http
 
 A simple statblock file, modified from [TheNightMayor](https://github.com/TheNightMayor)'s Starfinder bestiary layout, can be found [here](assets/starfinder-character-layout.json).
 
-You will need to add the properties `statblocks: true` and `layout: Starfinder Character Layout` (or whatever layout you prefer) to the frontmatter for the character to be parsed correctly by Fantasy Statblocks.
+You will need to add the properties `statblock: true` and `layout: Starfinder Character Layout` (or whatever layout you prefer) to the frontmatter for the character to be parsed correctly by Fantasy Statblocks.
 
 ## Installation
 
