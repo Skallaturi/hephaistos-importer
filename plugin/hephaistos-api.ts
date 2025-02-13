@@ -25,7 +25,7 @@ export async function importCharacter(id: string): Promise<Character> {
 		throw new Error("could not access character with id " + id);
 	if (characterData.updated < API_CHANGE_TIME)
 		throw new Error(
-			`${characterData.name} has not been changed after Hephaistos v120 launched, so it is missing required data.\nTry forcing a save on Hephaistos, for example by adding and then removing a point of damage`
+			`${characterData.name} has not been changed after Hephaistos v120 launched, so the file is missing required data.\nTry forcing a save on Hephaistos, for example by adding and then removing a point of damage`
 		);
 	if (!characterData.json)
 		throw new Error(
