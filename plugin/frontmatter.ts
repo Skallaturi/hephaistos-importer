@@ -44,12 +44,14 @@ type Frontmatter = {
 	augmentations: string[];
 	inventory: string[];
 	"situational bonuses": string[];
-
 	// --- Initiative tracker fields
 	level?: number; // total level
 	hp?: number; // sum of health and stamina
 	ac?: string; // string with EAC and KAC
 	modifier?: number; // initiative modifier
+	// --- Fantasy Statblocks fields
+	statblock?: boolean; // parse statblock
+	layout?: string; // which statblock layout to use
 };
 
 /** Update the character note in Obsidian */
@@ -300,5 +302,14 @@ function processFrontMatter(
 			character.vitals.stamina.max -
 			character.vitals.stamina.damage +
 			character.vitals.temporary;
+	}
+
+	if (settings.statblocksFormat) {
+		if (frontmatter.statblock === undefined) {
+			frontmatter.statblock = true;
+		}
+		if (frontmatter.layout === undefined) {
+			frontmatter.layout = settings.statblockLayout;
+		}
 	}
 }

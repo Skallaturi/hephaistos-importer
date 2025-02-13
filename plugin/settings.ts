@@ -9,6 +9,8 @@ export interface HephaistosImporterPluginSettings {
 	enableInitiativeTracker: boolean;
 	// format for Fantasy Statblocks
 	statblocksFormat: boolean;
+	// layout to add if none is defined
+	statblockLayout: string;
 }
 
 export const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
@@ -17,4 +19,5 @@ export const DEFAULT_SETTINGS: HephaistosImporterPluginSettings = {
 	createLinks: false,
 	enableInitiativeTracker: false,
 	statblocksFormat: false,
+	statblockLayout: "Starfinder Character Layout",
 };
