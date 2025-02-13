@@ -72,18 +72,20 @@ Create a folder in your obsidian vault's `.obsidian/plugins/` folder and downloa
 
 This plugin is _not_ intended to replace Hephaistos in any way. It is merely importing the most important data for convenience's sake -- probably most useful for Game Masters.
 
-## Bugs
+## Known issues
 
 The plugin utilizes a feature implemented in Hephaistos on the 3rd of February 2025. It will fail to import characters who haven't been saved since then. To update a character, simply appply a point of damage and remove it again.
 
 ## Future
 
-I plan to have this plugin integrate with other Starfinder projects for Obsidian. Please bring any to my knowledge.
+I plan to keep this plugin compatible with other Starfinder projects for Obsidian. Please bring any to my knowledge.
 
 ## Contact
 
+Bug reports and feature requests are very welcome.
+
 [Github](https://github.com/Skallaturi/hephaistos-importer)
 
-E-mail: tore@saederup.net
+[E-mail](mailto:tore@saederup.net)
 
 Or tag @Skallaturi on the Obsidian Discord, Obsidian TTRPG Discord, or Starfinder Discord
