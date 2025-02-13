@@ -1,5 +1,8 @@
 import { requestUrl } from "obsidian";
 import { Character } from "./character";
+
+const API_CHANGE_TIME = 1738586040000;
+
 /** This would probably be faster if we just imported all characters in one grapgQL call,
  *   but that makes error handling a bit trickier
  */
@@ -20,9 +23,13 @@ export async function importCharacter(id: string): Promise<Character> {
 	);
 	if (!characterData)
 		throw new Error("could not access character with id " + id);
+	if (characterData.updated < API_CHANGE_TIME)
+		throw new Error(
+			`${characterData.name} has not been changed after Hephaistos v120 launched, so it is missing required data.\nTry forcing a save on Hephaistos, for example by adding and then removing a point of damage`
+		);
 	if (!characterData.json)
 		throw new Error(
-			`No JSON data found on for ${characterData.name}. Try forcing a save on Hephaistos by e.g adding and then removing a point of damage`
+			`No JSON data found on for ${characterData.name}.\nTry forcing a save on Hephaistos, for example by adding and then removing a point of damage`
 		);
 
 	const character = JSON.parse(characterData.json) as Character;
@@ -39,6 +46,7 @@ function hephaistosQuery(): string {
     readOnlyPermalinkId
     name
     json
+	updated
   }
 }`;
 }
@@ -55,4 +63,5 @@ export type HephaistosCharacter = {
 	readOnlyPermalinkId: string;
 	name: string;
 	json: string;
+	updated: number;
 };
