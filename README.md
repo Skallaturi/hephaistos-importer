@@ -82,7 +82,7 @@ I plan to keep this plugin compatible with other Starfinder projects for Obsidia
 
 ## Contact
 
-Bug reports and feature requests are very welcome.
+Bug reports and feature requests are very welcome. How do you use the plugin? Can I make it better for you?
 
 [Github](https://github.com/Skallaturi/hephaistos-importer)
 
