@@ -157,6 +157,8 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 			}),
 			".",
 			containerEl.createEl("br"),
+			`After importing characters with this option, run Fantasy Statblocks' "Parse Frontmatter for Creatures" function`,
+			containerEl.createEl("br"),
 			"A sample template can be found ",
 			containerEl.createEl("a", {
 				href: "https://github.com/Skallaturi/hephaistos-importer/blob/master/assets/starfinder-character-layout.json",
@@ -165,7 +167,10 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 			"."
 		);
 		new Setting(containerEl)
-			.setName("Fantasy Statblocks support")
+			.setName("Fantasy Statblock support")
+			.setHeading();
+		new Setting(containerEl)
+			.setName("Enable Fantasy Statblocks support")
 			.setDesc(statblocksDesc)
 			.addToggle((toggle) =>
 				toggle
@@ -173,7 +178,22 @@ class HephaistosImporterSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.statblocksFormat = value;
 						await this.plugin.saveSettings();
+						this.display();
 					})
 			);
+		if (this.plugin.settings.statblocksFormat) {
+			new Setting(containerEl)
+				.setName("Default Statblock layout")
+				.setDesc("Add this to notes if no other layout is defined")
+				.addText((text) =>
+					text
+						.setValue(this.plugin.settings.statblockLayout)
+						.onChange(async (value) => {
+							this.plugin.settings.statblockLayout =
+								normalizePath(value);
+							await this.plugin.saveSettings();
+						})
+				);
+		}
 	}
 }
