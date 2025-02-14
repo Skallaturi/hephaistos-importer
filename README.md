@@ -36,7 +36,8 @@ Frontmatter will only be updated, not replaced. If you have other frontmatter en
 _Enabled in settings_.
 
 Some fields, such as spell names, can be created either as plain text or Obsidian hyperlinks.
-The links are based on the [Community SRD vault](https://github.com/Obsidian-TTRPG-Community/Starfinder-SRD-Markdown)'s structure.
+
+The links are based on the [Community SRD vault](https://github.com/Obsidian-TTRPG-Community/Starfinder-SRD-Markdown)'s structure, but since the vault is very complex, the plugin may guess wrong when trying to create a link path.
 
 ### Initiative Tracker compatibility
 
