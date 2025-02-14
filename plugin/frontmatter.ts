@@ -18,7 +18,9 @@ type Frontmatter = {
 	alignment: string;
 	abilities: Record<string, number>[];
 	race: string;
+	racialTraits: string[];
 	classes: Record<string, number>[] | WrappedString[];
+	classFeatures: string[];
 	theme: string;
 	stamina: number;
 	"max stamina": number;
@@ -94,10 +96,10 @@ function processFrontMatter(
 		return `[[${link}]]`;
 	};
 
-	const linkToHeading = (file: string, heading: string) =>
-		settings.createLinks && heading
-			? `[[${file}#${heading}|${heading}]]`
-			: heading;
+	const linkToHeading = (file: string, heading: string, name?: string) =>
+		settings.createLinks
+			? `[[${file}#${heading}|${name ?? heading}]]`
+			: name ?? heading;
 
 	frontmatter.name = character.name;
 	frontmatter["hephaistos link"] =
@@ -117,6 +119,17 @@ function processFrontMatter(
 	];
 
 	frontmatter.race = link(character.race.name);
+	frontmatter.racialTraits = character.race.selectedTraits.flatMap((trait) =>
+		trait.selectedOptions?.length
+			? trait.selectedOptions.map((option) =>
+					linkToHeading(
+						trait.name,
+						option.name,
+						`${trait.name}: ${option.name}`
+					)
+			  )
+			: link(trait.name)
+	);
 
 	frontmatter.classes = settings.statblocksFormat
 		? character.classes.map((m) => {
@@ -125,6 +138,19 @@ function processFrontMatter(
 		: character.classes.map((m) => {
 				return { [link(m.name)]: m.levels };
 		  });
+	frontmatter.classFeatures = character.classes
+		.flatMap((c) => c.features)
+		.flatMap((feature) =>
+			feature.options.length
+				? feature.options.map((option) =>
+						linkToHeading(
+							feature.name,
+							option.name,
+							`${feature.name}: ${option.name}`
+						)
+				  )
+				: link(feature.name)
+		);
 
 	frontmatter.theme = link(character.theme.name);
 
@@ -224,7 +250,17 @@ function processFrontMatter(
 				};
 		  });
 
-	frontmatter.feats = character.feats.acquiredFeats.map((m) => link(m.name));
+	frontmatter.feats = character.feats.acquiredFeats.flatMap((feat) =>
+		feat.selectedOptions?.length
+			? feat.selectedOptions.map((option) =>
+					linkToHeading(
+						feat.name,
+						option.name,
+						`${feat.name}: ${option.name}`
+					)
+			  )
+			: link(feat.name)
+	);
 
 	const spellsPerDay = [0, 0, 0, 0, 0, 0, 0];
 	// hephaistos uses -1 spell per day as "at will"
@@ -274,7 +310,17 @@ function processFrontMatter(
 
 	frontmatter.augmentations = character.inventory
 		.filter((f) => f.type === "Augmentation")
-		.map((m) => link(m.name));
+		.flatMap((augmentation) =>
+			augmentation.selectedOptions?.length
+				? augmentation.selectedOptions.map((option) =>
+						linkToHeading(
+							augmentation.name,
+							option.name,
+							`${augmentation.name}: ${option.name}`
+						)
+				  )
+				: link(augmentation.name)
+		);
 
 	frontmatter.inventory = character.inventory
 		.filter(
