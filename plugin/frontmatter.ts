@@ -97,9 +97,9 @@ function processFrontMatter(
 	};
 
 	const linkToHeading = (file: string, heading: string, name?: string) =>
-		settings.createLinks && heading
+		settings.createLinks
 			? `[[${file}#${heading}|${name ?? heading}]]`
-			: heading;
+			: name ?? heading;
 
 	frontmatter.name = character.name;
 	frontmatter["hephaistos link"] =
