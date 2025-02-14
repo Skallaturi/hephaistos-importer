@@ -78,8 +78,6 @@ The plugin utilizes a feature implemented in Hephaistos on the 3rd of February 2
 
 ## Future
 
-The frontmatter is currently missing Class Features, such as Soldier Fighting Style. I plan to implement them once I've come up with a good logic for it.
-
 I want to keep this plugin compatible with other relevant Starfinder projects and Obsidian plugins or templates/styles. Please bring any to my knowledge.
 
 ## Contact
